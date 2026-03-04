@@ -126,7 +126,9 @@ Get stuff installed
 
     Solidworks **THIS SOFTWARE CAN ONLY BE INSTALLED ON WINDOWS
         www.solidworks.com/sek
-            MUST CHOOSE 2024 EDITION **unless there is a key available for newer version
+            MUST CHOOSE 2024 EDITION!! the specific edition is tied to key **unless there is a key available for newer version... ask the club or something
+	put your info in there
+	select yes, you already have a key that starts with 9020
         license key 9020008745489282ND6RR87H
             source: old robosub discord->subteams frame->check pins
                 https://discord.com/channels/814398882330837034/814398883030630445/1281683869807935518
