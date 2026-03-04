@@ -1,0 +1,33 @@
+Exported Wailord model to use with Unity, ready to use
+https://drive.google.com/file/d/1JYw8op4JMwmV61B_cBXBCstDVDL55fhs/view?usp=drive_link
+(Contact if file is unavailable)
+	In Unity: Assets > import new asset > select all the items in folder.
+	Now you can drag the model into the hierarchy.
+		You can delete the camera that was imported too.
+
+Unity version 6.3LTS (6000.3.9f1 as of February 25, 2026)
+
+Export Solidworks to use in Unity yourself
+https://en.wiki.makerepo.com/mediawiki/index.php?title=Tutorial:_Creating_Unity_Assets_with_SOLIDWORKS
+	With your Solidworks install, you should also have Solidworks Visualize
+	Open a new blank project
+	File > Import > Select the complete.sldasm
+		Import Settings
+			Geometry
+				Part Grouping select the dropdown menu -> Appearance
+				Monitor File OFF (disabled)
+				Snap to Floor ON*
+				Instancing ON
+			Appearances
+				Apply Auto Paint OFF (disabled)
+				Ignore texture references OFF
+				Auto search for missing textures ON
+				Manual search for missing textures ON
+			All other settings OFF (Checkbox next to menu option, only Geometry and Appearances should be checked)
+		When imported, click the model
+			Sidebar menu thing, go to Transform > click the "center" button*
+	File > Export > Export Project > Choose a location to save it, save as type .fbx
+	
+* This is because the model in Solidworks was not centered around origin.
+  I'm not familiar with Solidworks so I didn't really bother changing anything about that.
+  If a model was centered about the origin, import setting Snap to floor OFF and don't need to transform to center.
