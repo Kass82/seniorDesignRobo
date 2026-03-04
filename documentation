@@ -1,0 +1,14 @@
+ Working and Creating a horse model to see if can run model on the camera
+
+  On the laptop downloading a dataset from git using this command git clone https://github.com/WongKinYiu/yolov7.git
+
+Running into errors trying to download the weights from the command python detect.py --weights yolov7.pt --source inference/images
+
+Going through a lot of ways to attempt to fix but havent found a way yet 
+
+
+worked by fixing the code from ckpt = torch.load(w, map_location=map_location)  # load 
+
+   to 
+
+   ckpt = torch.load(w, map_location=map_location, weights_only=False)  # load
