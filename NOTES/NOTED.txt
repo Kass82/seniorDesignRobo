@@ -144,3 +144,8 @@ https://git-lfs.com/
     git lfs install
     Create a .gitattributes file
     In there, specify the file types to track, such as "*.zip"
+
+https://github.com/gitattributes/gitattributes/blob/master/Unity.gitattributes
+	^^for LFS
+https://github.com/github/gitignore/blob/main/Unity.gitignore
+	^^for unity projects
