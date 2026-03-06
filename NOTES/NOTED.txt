@@ -139,3 +139,8 @@ fuck gazebo we have moved to unity
 
 see solidworks_to_unity note
 
+Uploading large files to GitHub (>100 MB)
+https://git-lfs.com/
+    git lfs install
+    Create a .gitattributes file
+    In there, specify the file types to track, such as "*.zip"
