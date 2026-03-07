@@ -1,0 +1,250 @@
+# RoboSub Contribution Documentation
+
+## Overview
+
+This document summarizes my contributions to the RoboSub project, focusing on my work in sonar research and control logic, my transition into simulation development, and the technical issues I worked through during the project.
+
+---
+
+## 1. Sonar Research and Development
+
+My first major responsibility in the RoboSub project was working on the sonar system. My role was to research how sonar could be used on the submarine, how it could detect obstacles or walls, and how the sonar data could be connected to the submarine’s thrusters so the sub could make movement decisions automatically.
+
+### Goal of the Sonar System
+
+The goal was for the submarine to:
+
+* detect objects or walls in front of it,
+* determine whether it was safe to continue forward,
+* move closer to objects when needed,
+* and turn away when the submarine got too close to an obstacle.
+
+This would allow the RoboSub to behave more autonomously instead of depending only on manual input.
+
+### Research Reference
+
+One of the main resources I used during my sonar research was:
+
+* Tinkernut Labs – YouTube research video: [https://www.youtube.com/watch?v=K5Aw86ROFA8](https://www.youtube.com/watch?v=K5Aw86ROFA8)
+
+This research helped me understand the general idea of how sonar sensors work, how distance can be measured, and how sensor data can be translated into movement logic.
+
+---
+
+## 2. Sonar Control Logic and Coding Concept
+
+After researching sonar, I worked on the logic for how the submarine should respond based on measured distance.
+
+### Distance Zones
+
+I divided the sonar readings into three main zones:
+
+* SAFE_ZONE: 4.0 m and above → move forward / move closer
+* APPROACH_ZONE: 2.0–4.0 m → move closer slowly
+* DANGER_ZONE: below 2.0 m → turn away / avoid
+
+This zoning system was intended to help the submarine decide what action to take depending on how far away an object was.
+
+### Wall Detection Logic
+
+I also researched a way to detect whether the submarine was facing a wall rather than a single object. The idea was to compare multiple recent distance readings.
+
+If the distance readings stayed very similar, then the object in front of the submarine was likely a wall instead of a small target.
+
+Example logic:
+
+```python
+def is_wall(distances):
+    return max(distances) - min(distances) < 0.3
+```
+
+This means that if the distance values do not change much, the system would assume the submarine is looking at a flat surface.
+
+---
+
+## 3. Decision-Making Logic for Sonar + Thrusters
+
+I then designed decision logic for how the submarine should react once sonar data was received.
+
+### Detection Rules
+
+```python
+SAFE = 4.0
+DANGER = 2.0
+
+def decide(distance, wall_detected):
+    if distance < DANGER:
+        return "TURN_AWAY"
+
+    if wall_detected and distance < SAFE:
+        return "TURN_AND_SEARCH"
+
+    if distance > SAFE:
+        return "MOVE_CLOSER"
+
+    return "HOLD"
+```
+
+### Meaning of the Logic
+
+* If the submarine is too close to something, it should immediately turn away.
+* If a wall is detected and it is within the safe range, the sub should turn and continue searching.
+* If the target is farther than the safe zone, the sub should move closer.
+* Otherwise, the sub should hold position.
+
+This logic was meant to support autonomous behavior using sonar input.
+
+---
+
+## 4. Search, Approach, and Avoid State Machine
+
+I also worked on a basic state-machine structure that connected sonar readings with thruster behavior.
+
+The idea was to split the sub’s behavior into three major states:
+
+* SEARCH
+* APPROACH
+* AVOID
+
+### Search State
+
+In SEARCH mode, the submarine rotates left while scanning the environment. If sonar detects an object within range and it is not a wall, the state changes to APPROACH.
+
+### Approach State
+
+In APPROACH mode, the submarine moves forward slowly toward the detected object. If it gets too close, it switches to AVOID.
+
+### Avoid State
+
+In AVOID mode, the submarine stops, waits briefly, rotates away, and then returns to SEARCH.
+
+Example structure:
+
+```python
+sonar = Sonar()
+thrusters = Thrusters()
+
+state = SEARCH
+history = []
+
+while True:
+    distance = sonar.get_distance()
+    history.append(distance)
+
+    if len(history) > 6:
+        history.pop(0)
+
+    wall = is_wall(history)
+
+    print(f"State={state}  Distance={distance}m")
+
+    # SEARCH MODE
+    if state == SEARCH:
+        thrusters.rotate("left")
+
+        if distance < SAFE_DISTANCE and not wall:
+            print("Object detected → APPROACH")
+            state = APPROACH
+
+    # APPROACH
+    elif state == APPROACH:
+        if distance < DANGER_DISTANCE:
+            print("Too close → AVOID")
+            state = AVOID
+        else:
+            thrusters.forward(0.3)
+
+    # AVOID
+    elif state == AVOID:
+        thrusters.stop()
+        time.sleep(0.5)
+        thrusters.rotate("right", 0.4)
+        time.sleep(1.2)
+        state = SEARCH
+
+    time.sleep(0.4)
+```
+
+This was part of my effort to figure out how sonar and thrusters could work together if the project continued using sonar, or how similar logic could later be adapted for the camera system.
+
+---
+
+## 5. Why Sonar Was Not Used in the Final Direction
+
+Although I spent time researching and planning the sonar system, our team later decided not to continue using sonar in the project.
+
+### Main Reasons
+
+* The sonar part cost around $500.
+* We did not receive the part in time.
+* Because of the cost and timing issue, continuing development around sonar was no longer practical.
+
+As a result, the project shifted away from sonar and toward other systems, including simulation work and the possibility of relying more on the camera instead.
+
+---
+
+## 6. Transition to Simulation Work
+
+After the sonar direction was dropped, I moved into the simulation side of the project.
+
+### Initial Task: Submarine Model
+
+At that stage, we were supposed to begin building the submarine model in the simulation environment. However, I ran into technical issues while trying to create or render the model in Unity.
+
+### Problem Faced
+
+I had an issue where Unity kept crashing during rendering while I was trying to work on the submarine model. At one point, the crashing became severe enough that I had to completely delete Unity and its related files and start over from scratch. I believe part of the problem came from a mistake I made while working on the water system. I created waves in the simulation but did not set limits on how tall or wide the waves should be. Because of that, I assume the wave settings became too extreme, which may have caused Unity to crash repeatedly and eventually corrupt the project file.
+
+### Time Spent Solving It
+
+It took me about 1–2 days to troubleshoot the crashing issue, remove Unity, reinstall the necessary files, and rebuild the environment from scratch.
+
+I was able to begin creating the model, but by that point one of my teammates had already created the model, so the team’s effort shifted toward other tasks instead of duplicating the same work.
+
+---
+
+## 7. Work on Water Physics and Gravity
+
+Once the model was already being handled, I started focusing more on water physics and submarine gravity/movement behavior in the simulation.
+
+The goal here was to make the submarine behave more realistically in the environment by adjusting how it moves and how gravity or underwater motion should affect it.
+
+This became useful because underwater movement is different from a normal ground vehicle, so getting the physics and controls right is important for an accurate simulation.
+
+---
+
+## 8. Reusing Previous Unity Experience
+
+While working on the movement and gravity side of the simulation, I remembered that I had created an older Unity game in the past that already had:
+
+* gravity,
+* movement systems,
+* and working gameplay mechanics.
+
+Because of that, I reopened my old project to see whether I could reuse some of that knowledge or code for the RoboSub simulation.
+
+### Software Versions I Used
+
+* Unity 2022
+* Unity Hub 3.9.1
+
+The old project still worked, so I started exploring whether its movement and gravity systems could help with the submarine simulation.
+
+---
+
+## 9. Current Technical Issue
+
+Right now, I am trying to transfer the old Unity project into a newer Unity version so that it can better match the newer development setup for the RoboSub project.
+
+### Current Problem
+
+I am currently having issues with:
+
+* downloading or installing Unity 6.3 LTS,
+* and fixing the compatibility problems involved in moving the old Unity project into the newer version.
+* Unity License expired need to talk to Unity Customer Service to reapply my License as a student (CustomerService@sheerid.com)
+
+This is the current technical step I am working through so that the older movement/gravity system can potentially be reused or adapted for RoboSub simulation.
+
+---
+
