@@ -137,7 +137,42 @@ Get stuff installed
 2nd SEMESTER---------
 fuck gazebo we have moved to unity
 
-see solidworks_to_unity note
+Solidworks to Unity
+Exported Wailord model to use with Unity, ready to use
+(The model is also available to download in the github, folder is labeled "asm_fbx")
+https://drive.google.com/file/d/1JYw8op4JMwmV61B_cBXBCstDVDL55fhs/view?usp=drive_link
+(Contact if file is unavailable)
+	In Unity: Assets > import new asset > select all the items in folder.
+	Now you can drag the model into the hierarchy.
+		You can delete the camera that was imported too.
+
+Unity version 6.3LTS (All members are to use version 6000.3.10f1 for consistency between collaborators, this is the latest version of 6.3LTS as of March 6, 2026)
+
+Export Solidworks to use in Unity yourself
+https://en.wiki.makerepo.com/mediawiki/index.php?title=Tutorial:_Creating_Unity_Assets_with_SOLIDWORKS
+	With your Solidworks install, you should also have Solidworks Visualize
+	Open a new blank project
+	File > Import > Select the complete.sldasm*
+	*note The Wailord assembly, which was found in discord, also uploaded to github
+		Import Settings
+			Geometry
+				Part Grouping select the dropdown menu -> Appearance
+				Monitor File OFF (disabled)
+				Snap to Floor ON*
+				Instancing ON
+			Appearances
+				Apply Auto Paint OFF (disabled)
+				Ignore texture references OFF
+				Auto search for missing textures ON
+				Manual search for missing textures ON
+			All other settings OFF (Checkbox next to menu option, only Geometry and Appearances should be checked)
+		When imported, click the model
+			Sidebar menu thing, go to Transform > click the "center" button*
+	File > Export > Export Project > Choose a location to save it, save as type .fbx
+	
+* This is because the model in Solidworks was not centered around origin.
+  I'm not familiar with Solidworks so I didn't really bother changing anything about that.
+  If a model was centered about the origin, import setting Snap to floor OFF and don't need to transform to center.
 
 Uploading large files to GitHub (>100 MB)
 https://git-lfs.com/
