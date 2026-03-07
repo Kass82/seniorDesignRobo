@@ -160,3 +160,5 @@ https://jeremypedersen.com/posts/2024-07-17-gazebo-ros-install
 - Bryan#2 got his old stuff running without corruption. This is good news. We'll try and update that while we try and make the water physics work. Bryan#2 said he got the water physics to work but it got corrupted.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3/6/2026:
+- Alvin found out that Unity has sample water physics that we can try to use. Uploaded the model and got Unity Version Control working. Seems we can move from here on.
