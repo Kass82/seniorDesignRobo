@@ -1,0 +1,37 @@
+Goal is to get the site from http to https :)
+
+Uncomplicated Firewall (UFW) is a program for managing a netfilter firewall designed to be easy to use. It uses a command-line interface consisting of a small number of simple commands, and uses iptables for configuration.
+
+root@debian13-robosubla:~# ufw status
+-bash: ufw: command not found
+
+root@debian13-robosubla:~# ss -tulnp | grep -E ':80|:443'
+tcp   LISTEN 0      511          0.0.0.0:80        0.0.0.0:*    users:(("nginx",pid=189855,fd=5),("nginx",pid=158837,fd=5))
+tcp   LISTEN 0      511             [::]:80           [::]:*    users:(("nginx",pid=189855,fd=6),("nginx",pid=158837,fd=6))
+
+this was to check if the ports are being listened to in this case not on 443
+
+apt update
+apt install certbot python3-certbot-nginx -y
+
+certbot --nginx -d robosubla.org -d www.robosubla.org
+
+after it's gonna ask you for your email i double checked we can use whatever email even after i already used mine. 
+
+Error
+	Certbot failed to authenticate some domains (authenticator: nginx). The Certificate Authority reported these problems:
+  Domain: www.robosubla.org
+  Type:   dns
+  Detail: DNS problem: NXDOMAIN looking up A for www.robosubla.org - check that a DNS record exists for this domain; DNS problem: NXDOMAIN looking up AAAA for www.robosubla.org - check that a DNS record exists for this domain
+
+Hint: The Certificate Authority failed to verify the temporary nginx configuration changes made by Certbot. Ensure the listed domains point to this nginx server and that it is accessible from the internet.
+
+-------------------------------------------------------------------------------
+
+instead i ran 
+
+certbot --nginx -d robosubla.org
+
+got the certificate and we're good! 
+
+new link https://robosubla.org/
