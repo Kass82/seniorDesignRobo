@@ -1,0 +1,653 @@
+Control Sub team research 
+========================================================================
+Research Mirco-RoS
+https://micro.ros.org/docs/overview/hardware/
+officially support Teensy 4.1 and Raspberry Pi Pico RP2040
+Seems like not officially support but community ports exist on Raspberry Pi Pico 2
+
+https://micro.ros.org/docs/tutorials/core/teensy_with_arduino/
+
+micro-ROS uses DDS-XRCE (Extremely Resource Constrained Environments) protocol and communicates with a micro-ROS Agent running on a Linux host such as Jetson Orin.
+
+========================================================================
+
+Raspberry Pi Pico 2:
+- CPU: Dual-core Arm Cortex-M33 or dual Hazard3 RISC-V @ up to 150 MHz
+- RAM: 520 KB SRAM
+- Flash: 4 MB
+- Peripherals: I2C, SPI, UART, USB 1.1
+Pico 2 specs: https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+
+Teensy 4.1:
+- CPU: ARM Cortex-M7 @ 600 MHz
+- RAM: 1 MB
+- Flash: 2 MB + optional external memory
+- Peripherals: Multiple UART, SPI, I2C, CAN, Ethernet support
+Teensy specs: https://www.pjrc.com/store/teensy41.html
+
+Seems like Teensy 4.1 is significantly faster due to higher clock speed, better core architecture, more RAM, and better micro-ROS support.
+
+========================================================================
+
+I2C:
+- Two-wire protocol
+- Good for multiple sensors, slower
+- Ideal for short distances on PCB or small robots
+https://learn.sparkfun.com/tutorials/i2c/all
+
+SPI:
+- Faster communication
+- Uses more wires 
+- Good for fast sensors, SD cards, encoders
+https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
+
+UART:
+- Best for board-to-board communication over medium distances
+- Used for Teensy ↔ Jetson Orin communication in micro-ROS (Serial transport)
+
+=======================================================================
+
+Wiring Teensy 4.1 to Jetson Orin
+Recommended method: USB connection
+- Teensy USB → Jetson Orin USB-A
+- Appears as /dev/ttyACM0
+- Supports micro-ROS serial agent
+
+Alternative: UART
+- Connect Jetson TX → Teensy RX
+- Connect Jetson RX → Teensy TX
+- Common ground required
+- Jetson UART shows up as /dev/ttyTHS* devices
+
+micro-ROS serial agent: https://micro.ros.org/docs/tutorials/core/first_application_linux/
+Jetson Orin pinout: https://developer.nvidia.com/embedded/learn/jetson-orin-nano-devkit-user-guide
+
+========================================================================
+
+Powering Jetson Orin Nano Externally
+Jetson Orin Nano Developer Kit Power Requirements:
+- Voltage input: 7–20 V DC (commonly 12 V or 19 V adapters)
+- Recommended current: 4–5 A depending on load
+
+For robotics:
+Battery → DC-DC buck/boost regulator → Orin barrel jack (12 V recommended)
+
+NVIDIA Power Guide: https://developer.nvidia.com/embedded/jetson-orin-nano-devkit-user-guide#power
+
+
+========================================================================
+Ardiuno Base Project 
+https://www.instructables.com/RC-Submari ne-Hack-Android-controller-Arduino-Andro/
+
+
+========================================================================
+Got A Arduino base Robo Car from Richard, trying to figure it out how to work
+
+Main Components
+- Arduino UNO R3 (main microcontroller board)
+- UCTRONICS UC-435 Rev.B Motor Control Shield
+- 2 DC gear motors
+- Battery pack connected to POWER IN
+- Motors connected via 4-wire white connector
+- Motor Connector Layout
+The white motor connector on the shield is labeled:
+M4- M4+ M3- M3+
+
+========================================================================
+
+Motor Driver Chip
+The shield normally uses two L293D motor driver chips.
+Each chip controls two motors.
+Chip	Controls
+IC1	M1 and M2
+IC2	M3 and M4
+From the board:
+IC1 socket is empty
+Only IC2 is installed
+Therefore:
+Motor	Status
+M1	Not usable
+M2	Not usable
+M3	Working
+M4	Possibly damaged (Since it not working at all)
+
+Arduino Pin Mapping
+The UC-435 motor shield maps motors to Arduino pins like this:
+Motor	Direction Pins	Speed (PWM) Pin
+M1	D8, D11	D9
+M2	D12, D13	D10
+M3	D4, D7	D6
+M4	D2, D3	D5
+Since M3 works, I use
+Direction: pins 4 and 7
+Speed: pin 6
+========================================================================
+
+Motor Direction Logic
+
+For DC motors:
+IN1 HIGH + IN2 LOW  → forward
+IN1 LOW + IN2 HIGH  → backward
+Speed is controlled by PWM:
+analogWrite(enablePin, speed)
+Speed range:
+0   = stop
+255 = full speed
+
+Code that works for now 
+Working Motor Test Code
+
+This code drives Motor M3 only.
+
+int M3_IN1 = 4;
+int M3_IN2 = 7;
+int M3_PWM = 6;
+
+void setup() {
+  pinMode(M3_IN1, OUTPUT);
+  pinMode(M3_IN2, OUTPUT);
+  pinMode(M3_PWM, OUTPUT);
+}
+
+void loop() {
+
+  analogWrite(M3_PWM, 200);
+
+  digitalWrite(M3_IN1, HIGH);
+  digitalWrite(M3_IN2, LOW);
+  delay(2000);
+
+  digitalWrite(M3_IN1, LOW);
+  digitalWrite(M3_IN2, HIGH);
+  delay(2000);
+}
+
+Result:
+Motor spins forward for 2 seconds
+Then backward for 2 seconds
+Repeats forever
+
+========================================================================
+
+Current Problem  during testing:
+
+Motor on M3 spins normally
+Motor on M4 does not move at all
+No sound or vibration from M4 motor
+
+Might because of:
+
+M4 driver channel damaged
+Wiring issue inside the white connector
+Since M3 works, the driver chip is partially functional.
+
+========================================================================
+Temporary Workaround
+
+Both motors can be wired in parallel to M3 so they run together.
+
+This means:
+
+Motor A + and B + = connect to M3+
+Motor A - and B - = connect to M3-
+            
+Both motors will then move together using the same control signal.
+
+Limitations:
+Robot can only move forward/back
+Cannot turn
+
+========================================================================
+
+Decide to give up on this stupid thing and get a new Arduino kit from Amazon
+
+========================================================================
+Got this Arduino clone from amazon
+ 
+https://a.co/d/01Roj0Gj
+
+Glad it comes with instruction menu. 
+
+========================================================================
+Took a long to wired up the robo car but the car is running right now
+
+Main Components
+- a clone Arduino UNO R3
+- 2 DC gear motors
+- 2 Obstacle Avoidance Sensor 
+- 1 Ultrasonic distance Sensor 
+- breadboard Connector Layout
+
+========================================================================
+coding for the car that works 
+
+// ================= PIN DEFINITIONS =================
+
+// left side back motors
+const int left_back_In1 = 2;  // OUT1 (left side - back)
+const int left_back_In2 = 3;  // OUT2 (left side - back)
+
+// left side front motor
+const int left_front_In1 = A1;  // OUT1 (left side - front)
+const int left_front_In2 = A2;  // OUT2 (left side - front)
+
+// right side back motors
+const int right_back_In3 = 7; // OUT3 (right side - back)
+const int right_back_In4 = 8; // OUT4 (right side - back)
+
+// right side front motor
+const int right_front_In3 = A3;  // OUT3 (right side - front)
+const int right_front_In4 = A4;  // OUT4 (right side - front)
+
+// motor speed (PWM)
+const int left_back_EnA     = 5;   // back-left enable
+const int right_back_EnB    = 6;   // back-right enable
+const int left_front_EnA    = 9;   // front-left enable
+const int right_front_EnB   = 10;  // front-right enable
+
+// sensors
+const int SERVO_PIN = 11;
+const int TRIG_PIN  = 12;
+const int ECHO_PIN  = 13;
+
+
+// ============== BEHAVIOR CONSTANTS ==============
+
+// Wall detection threshold (cm): <= this is treated as "wall/blocked"
+const int thresholdCm = 15;     // you asked for 15 cm
+
+// Side openness threshold (cm): >= this is treated as "open enough to turn into"
+const int openMinCm   = 20;     // tune (15–25). 20 is good for wider corridors
+
+// Motor speed (0–255)
+const int motorSpeed = 150;
+
+// Timing for motion (tune for your rover + dirt)
+const unsigned long backUpTime = 800;  // ms to back up before deciding
+const unsigned long turnTime   = 800;  // ms to turn left/right (tune for ~90°)
+
+// Servo timing: makes the head movement "slow & calm"
+const unsigned long servoMoveDelay = 600;   // ms wait after servo moves before measuring
+
+// How often to check the FRONT distance while driving forward
+// Smaller = more responsive, larger = less jitter
+const unsigned long forwardCheckDelay = 150; // ms between front distance checks
+
+// Debug printing rate limit (so Serial Monitor isn't spammed)
+const unsigned long debugEveryMs = 500; // print front distance at most every 0.5s
+
+
+// ============== SERVO SETUP ==============
+Servo headServo;
+
+const int SERVO_FORWARD_ANGLE = 90;
+const int SERVO_LEFT_ANGLE    = 0;
+const int SERVO_RIGHT_ANGLE   = 180;
+
+
+// ============== STATE + MODE ==============
+enum RobotState {
+  DRIVE_FORWARD,
+  BACK_UP,
+  DECIDE_TURN,
+  TURN_LEFT,
+  TURN_RIGHT
+};
+
+enum ControlMode {
+  MODE_MANUAL,
+  MODE_AUTO
+};
+
+RobotState state = DRIVE_FORWARD;
+ControlMode controlMode = MODE_MANUAL;
+
+// Auto arming: AUTO mode does not move until you press 'g'
+bool autoRunning = false;
+
+// Timing trackers
+unsigned long stateStartTime = 0;
+unsigned long lastFrontCheckMs = 0;
+unsigned long lastDebugMs = 0;
+
+// Cached front distance (helps keep logic clean)
+long frontCmCached = 999;
+
+
+// =================== ULTRASONIC HELPERS ===================
+
+long pingUs() {
+  // HC-SR04 trigger pulse
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  // Echo pulse width in microseconds (timeout prevents freeze)
+  return pulseIn(ECHO_PIN, HIGH, 30000); // 30ms timeout
+}
+
+long usToCm(long us) {
+  if (us == 0) return 999; // no echo -> treat as very far
+  return us / 29 / 2;
+}
+
+// Measure WITHOUT moving the servo (assumes it's already facing forward)
+long measureFrontCmFast() {
+  return usToCm(pingUs());
+}
+
+// Measure after turning servo to a certain angle (slow movement style you liked)
+long measureAtAngleSlow(int angleDeg) {
+  headServo.write(angleDeg);
+  delay(servoMoveDelay);
+  return usToCm(pingUs());
+}
+
+
+// =================== MOTOR HELPERS ======================
+
+void setMotorSpeed(int speed) {
+  speed = constrain(speed, 0, 255);
+  analogWrite(left_back_EnA, speed);
+  analogWrite(right_back_EnB, speed);
+  analogWrite(left_front_EnA, speed);
+  analogWrite(right_front_EnB, speed);
+}
+
+void moveForward() {
+  // left forward
+  digitalWrite(left_back_In1, HIGH);
+  digitalWrite(left_back_In2, LOW);
+  digitalWrite(left_front_In1, HIGH);
+  digitalWrite(left_front_In2, LOW);
+
+  // right forward
+  digitalWrite(right_back_In3, HIGH);
+  digitalWrite(right_back_In4, LOW);
+  digitalWrite(right_front_In3, HIGH);
+  digitalWrite(right_front_In4, LOW);
+}
+
+void moveBackward() {
+  // left backward
+  digitalWrite(left_back_In1, LOW);
+  digitalWrite(left_back_In2, HIGH);
+  digitalWrite(left_front_In1, LOW);
+  digitalWrite(left_front_In2, HIGH);
+
+  // right backward
+  digitalWrite(right_back_In3, LOW);
+  digitalWrite(right_back_In4, HIGH);
+  digitalWrite(right_front_In3, LOW);
+  digitalWrite(right_front_In4, HIGH);
+}
+
+void rightTurn() {
+  // spin right: left forward, right backward
+  digitalWrite(left_back_In1, HIGH);
+  digitalWrite(left_back_In2, LOW);
+  digitalWrite(left_front_In1, HIGH);
+  digitalWrite(left_front_In2, LOW);
+
+  digitalWrite(right_back_In3, LOW);
+  digitalWrite(right_back_In4, HIGH);
+  digitalWrite(right_front_In3, LOW);
+  digitalWrite(right_front_In4, HIGH);
+}
+
+void leftTurn() {
+  // spin left: left backward, right forward
+  digitalWrite(left_back_In1, LOW);
+  digitalWrite(left_back_In2, HIGH);
+  digitalWrite(left_front_In1, LOW);
+  digitalWrite(left_front_In2, HIGH);
+
+  digitalWrite(right_back_In3, HIGH);
+  digitalWrite(right_back_In4, LOW);
+  digitalWrite(right_front_In3, HIGH);
+  digitalWrite(right_front_In4, LOW);
+}
+
+void stopMotor() {
+  digitalWrite(left_back_In1, LOW);
+  digitalWrite(left_back_In2, LOW);
+  digitalWrite(left_front_In1, LOW);
+  digitalWrite(left_front_In2, LOW);
+
+  digitalWrite(right_back_In3, LOW);
+  digitalWrite(right_back_In4, LOW);
+  digitalWrite(right_front_In3, LOW);
+  digitalWrite(right_front_In4, LOW);
+}
+
+// =================== AUTONOMOUS LOGIC =======================
+
+void runAutonomous() {
+  unsigned long now = millis();
+
+  switch (state) {
+
+    case DRIVE_FORWARD: {
+      // Keep servo facing forward while driving
+      headServo.write(SERVO_FORWARD_ANGLE);
+
+      // Check the front distance only every forwardCheckDelay ms
+      if (now - lastFrontCheckMs >= forwardCheckDelay) {
+        lastFrontCheckMs = now;
+        frontCmCached = measureFrontCmFast();
+      }
+
+      // Optional: rate-limited debug print
+      if (now - lastDebugMs >= debugEveryMs) {
+        lastDebugMs = now;
+        Serial.print("Front=");
+        Serial.print(frontCmCached);
+        Serial.println(" cm");
+      }
+
+      // If the front is clear, keep moving forward
+      if (frontCmCached > thresholdCm) {
+        moveForward();
+      } else {
+        // Wall detected -> stop, then back up
+        Serial.println("WALL detected -> BACK_UP");
+        stopMotor();
+        state = BACK_UP;
+        stateStartTime = now;
+      }
+      break;
+    }
+
+    case BACK_UP:
+      moveBackward();
+      if (now - stateStartTime >= backUpTime) {
+        stopMotor();
+        state = DECIDE_TURN;
+        stateStartTime = now;
+        Serial.println("AUTO: DECIDE_TURN (scan L/R)");
+      }
+      break;
+
+    case DECIDE_TURN: {
+      // Full scan happens ONLY here (after wall detection)
+      long leftCm  = measureAtAngleSlow(SERVO_LEFT_ANGLE);
+      long rightCm = measureAtAngleSlow(SERVO_RIGHT_ANGLE);
+
+      // Return to forward
+      headServo.write(SERVO_FORWARD_ANGLE);
+      delay(servoMoveDelay);
+
+      Serial.print("Scan: L=");
+      Serial.print(leftCm);
+      Serial.print(" cm, R=");
+      Serial.print(rightCm);
+      Serial.println(" cm");
+
+      bool leftOpen  = (leftCm  >= openMinCm);
+      bool rightOpen = (rightCm >= openMinCm);
+
+      if (leftOpen && !rightOpen) {
+        Serial.println("Decision: TURN LEFT (only left open)");
+        state = TURN_LEFT;
+      } else if (!leftOpen && rightOpen) {
+        Serial.println("Decision: TURN RIGHT (only right open)");
+        state = TURN_RIGHT;
+      } else if (leftOpen && rightOpen) {
+        // both open: pick the more open side
+        if (leftCm >= rightCm) {
+          Serial.println("Decision: TURN LEFT (both open, left >= right)");
+          state = TURN_LEFT;
+        } else {
+          Serial.println("Decision: TURN RIGHT (both open, right > left)");
+          state = TURN_RIGHT;
+        }
+      } else {
+        // Dead end: neither side looks open
+        Serial.println("Decision: DEAD END (both blocked) -> TURN LEFT");
+        state = TURN_LEFT;
+      }
+
+      stateStartTime = now;
+      break;
+    }
+
+    case TURN_LEFT:
+      leftTurn();
+      if (now - stateStartTime >= turnTime) {
+        stopMotor();
+        state = DRIVE_FORWARD;
+
+        // Force an immediate front check after turning
+        lastFrontCheckMs = 0;
+        frontCmCached = 999;
+
+        Serial.println("AUTO: DRIVE_FORWARD after LEFT");
+        stateStartTime = now;
+      }
+      break;
+
+    case TURN_RIGHT:
+      rightTurn();
+      if (now - stateStartTime >= turnTime) {
+        stopMotor();
+        state = DRIVE_FORWARD;
+
+        // Force an immediate front check after turning
+        lastFrontCheckMs = 0;
+        frontCmCached = 999;
+
+        Serial.println("AUTO: DRIVE_FORWARD after RIGHT");
+        stateStartTime = now;
+      }
+      break;
+  }
+}
+
+
+// =================== SETUP / LOOP =======================
+
+void setup() {
+  Serial.begin(9600);
+
+  // Motor direction pins
+  pinMode(left_back_In1, OUTPUT);
+  pinMode(left_back_In2, OUTPUT);
+  pinMode(right_back_In3, OUTPUT);
+  pinMode(right_back_In4, OUTPUT);
+
+  pinMode(left_front_In1, OUTPUT);
+  pinMode(left_front_In2, OUTPUT);
+  pinMode(right_front_In3, OUTPUT);
+  pinMode(right_front_In4, OUTPUT);
+
+  // Motor speed pins
+  pinMode(left_back_EnA, OUTPUT);
+  pinMode(right_back_EnB, OUTPUT);
+  pinMode(left_front_EnA, OUTPUT);
+  pinMode(right_front_EnB, OUTPUT);
+
+  // Ultrasonic pins
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  // Servo
+  headServo.attach(SERVO_PIN);
+  delay(500);
+  headServo.write(SERVO_FORWARD_ANGLE);
+  delay(servoMoveDelay);
+
+  // Initial speed
+  setMotorSpeed(motorSpeed);
+  stopMotor();
+
+  state = DRIVE_FORWARD;
+  stateStartTime = millis();
+
+  Serial.println("Rover ready.");
+  Serial.println("Controls:");
+  Serial.println("  m = MANUAL mode");
+  Serial.println("  o = AUTO mode (armed, does NOT move yet)");
+  Serial.println("  g = GO (start autonomous)");
+  Serial.println("  p = PAUSE (stop in auto)");
+  Serial.println("  w/s/a/d/x = manual control");
+  Serial.println("Notes:");
+  Serial.println("  - Servo scans LEFT/RIGHT only when a wall is detected in front.");
+  Serial.println("  - While driving forward, sensor stays facing forward.");
+}
+
+void loop() {
+  // Keep speeds applied
+  setMotorSpeed(motorSpeed);
+
+  // Read commands
+  if (Serial.available() > 0) {
+    char cmd = Serial.read();
+    handleCommand(cmd);
+  }
+
+  // Auto behavior
+  if (controlMode == MODE_AUTO) {
+    if (autoRunning) runAutonomous();
+    else stopMotor();
+  }
+
+  delay(20);
+}
+
+
+What the car able to do automatically: 
+
+- Driving forward autonomously
+- Detecting walls using an ultrasonic distance sensor
+- Backing away from obstacles
+- Scanning the environment to the left and right using a servo-mounted sensor
+- Choosing the direction with the most available space
+- Turning and continuing navigation through environment
+
+========================================================================
+
+Working on simulation for now on 
+
+Downloaded the Wailord model provided form Tristen Zhang and successfully import it on to Unity 
+
+Need to fine a way to figure out the water physics
+
+========================================================================
+
+Unity seems to provide a water physics sample on HDRP version 
+
+https://www.youtube.com/watch?v=Ic_3p90NdxM&t=227s
+
+Successfully create a sea with water physics 
+
+imported Wailord in the Sea scene
+
+added floaters on to the Wailord, now wailord is floating in the water 
+
+next up apply control to the Wailord. 
+
+gonna use Bryan #2's plane controller into wailord
+
+========================================================================
