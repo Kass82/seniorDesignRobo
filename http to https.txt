@@ -35,3 +35,8 @@ certbot --nginx -d robosubla.org
 got the certificate and we're good! 
 
 new link https://robosubla.org/
+
+
+------------------------------------------------------------------------------------
+
+You do not need to update the NGINX software itself to keep it certified, but you must reload or restart NGINX to apply renewed SSL/TLS certificates. NGINX caches certificate files on startup; if you renew a certificate but do not reload, it will continue to serve the expired one
