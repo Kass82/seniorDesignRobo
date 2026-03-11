@@ -1,17 +1,102 @@
- Working and Creating a horse model to see if can run model on the camera
+The YOLOv7 repository was downloaded from GitHub in order to obtain the scripts required to run object detection.
 
-  On the laptop downloading a dataset from git using this command git clone https://github.com/WongKinYiu/yolov7.git
+Command used:
 
-Running into errors trying to download the weights from the command python detect.py --weights yolov7.pt --source inference/images
+git clone https://github.com/WongKinYiu/yolov7.git
 
-Going through a lot of ways to attempt to fix but havent found a way yet 
+After cloning the repository, the project directory contained several important files and folders, including:
 
+detect.py
+train.py
+models/
+utils/
+cfg/
+requirements.txt
 
-worked by fixing the code from ckpt = torch.load(w, map_location=map_location)  # load 
+The most important script for running object detection is detect.py.
 
-   to 
+2. Goal of the Test
 
-   ckpt = torch.load(w, map_location=map_location, weights_only=False)  # load
+The goal was to run a pretrained YOLOv7 model on either:
 
-inside of the expeimental file inside of the models folder that came from the git repo
+• sample images
+• a webcam feed
 
+The standard command used to run detection on images is:
+
+python detect.py --weights yolov7.pt --source inference/images
+
+For webcam detection the command is:
+
+python detect.py --weights yolov7.pt --source 0
+
+Explanation of parameters:
+
+--weights yolov7.pt
+This loads the trained YOLOv7 model file.
+
+--source inference/images
+This runs detection on sample images included in the repository.
+
+--source 0
+This tells YOLOv7 to use the laptop webcam.
+
+3. Issue Encountered
+
+While attempting to run the command above, an error occurred when the model attempted to load the .pt checkpoint file.
+
+The error originated from the model loading function inside the repository.
+
+The failing code was located in the file:
+
+models/experimental.py
+
+The original line of code was:
+
+ckpt = torch.load(w, map_location=map_location)  # load
+
+This caused an error when attempting to load the YOLOv7 model.
+
+4. Root Cause
+
+The issue was caused by changes in newer versions of PyTorch (version 2.x).
+
+Recent versions of PyTorch introduced stricter security rules for loading serialized model checkpoints.
+
+By default, PyTorch now tries to load weights-only checkpoints, which prevents full model objects from being loaded unless explicitly allowed.
+
+However, YOLOv7 checkpoints contain the entire model object, not just the weights.
+
+Because of this mismatch, the default loading behavior caused the model loading process to fail.
+
+5. Solution
+
+The issue was resolved by modifying the checkpoint loading command inside the YOLOv7 repository.
+
+The file edited was:
+
+models/experimental.py
+
+Original code:
+
+ckpt = torch.load(w, map_location=map_location)  # load
+
+Modified code:
+
+ckpt = torch.load(w, map_location=map_location, weights_only=False)  # load
+
+Adding the weights_only=False argument tells PyTorch to allow loading the full checkpoint object instead of forcing a weights-only load.
+
+6. Result
+
+After modifying the code, the YOLOv7 model successfully loaded.
+
+The detection command was then able to run correctly.
+
+Example command used:
+
+python detect.py --weights yolov7.pt --source 0
+
+This connects the model to the laptop webcam and runs real-time object detection.
+
+The program then displays bounding boxes around detected objects.
