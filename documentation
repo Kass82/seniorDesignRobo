@@ -12,3 +12,6 @@ worked by fixing the code from ckpt = torch.load(w, map_location=map_location)  
    to 
 
    ckpt = torch.load(w, map_location=map_location, weights_only=False)  # load
+
+inside of the expeimental file inside of the models folder that came from the git repo
+
