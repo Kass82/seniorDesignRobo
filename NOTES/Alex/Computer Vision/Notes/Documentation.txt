@@ -1,0 +1,37 @@
+Consolidated Notes
+September 2025:
+- Learned and talked about CNNs to introduce the team to Visual Learning.
+- Looked through several bootcamps and courses.
+October 2025:
+- Introduction to YOLOv7 
+- Kubuntu 22.04.5 LTS (“Jammy Jellyfish”) and YOLOv7 (GitHub Repository) installed
+	- https://cdimage.ubuntu.com/kubuntu/releases/jammy/release/
+	- https://github.com/WongKinYiu/yolov7
+- Learn YOLOv7 architecture through videos and documentation
+https://www.youtube.com/watch?v=IboFrLHwxDg
+https://www.youtube.com/watch?v=-QWxJ0j9EY8
+- Setup Google Colab
+November 2025:
+- PyTorch Fix (See December)
+- Tested YOLOv7
+- Looked into OpenCV
+- 2025 Fall Presentation: https://docs.google.com/presentation/d/1mC9v057CF1tZv6EYGKP9OvIKoIRpRyZYSJPFRV4eTag/edit?slide=id.g3a807a01e4e_0_0#slide=id.g3a807a01e4e_0_0
+- Vision Stack: Camera → OpenCV → YOLOv7 (PyTorch) → ROS2 → Thrusters
+- Detect Horses Experiment
+- Technical explanation on Object Detection: https://www.youtube.com/watch?v=svn9-xV7wjk&t=170s
+
+January, February 2026:
+Torch >= 2.6 causes issues, had to uninstall it and reinstall it to an earlier version.
+1. !pip uninstall -y torch torchvision torchaudio
+2. !pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+3. !git clone https://github.com/WongKinYiu/yolov7.git
+4. %cd yolov7
+6. !pip install -r requirements.txt
+
+To test a dataset:
+1. !wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt
+2. !python detect.py --weights yolov7.pt --source inference/images/horses.jpg --conf 0.25
+- In case no such file or directory: %cd /content/yolov7
+
+March 2026:
+- Working on a model
