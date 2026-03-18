@@ -1,0 +1,139 @@
+Working on the simulation for now 
+
+Downloaded the Wailord model provided by Tristen and successfully imported it into Unity 
+
+Need to find a way to figure out the water physics
+
+========================================================================
+
+Unity seems to provide a water physics sample for the HDRP version 
+
+https://www.youtube.com/watch?v=Ic_3p90NdxM&t=227s
+
+Successfully create a sea with water physics 
+
+imported Wailord in the Sea scene
+
+Added floaters onto the Wailord; now Wailord is floating in the water 
+
+Next up, apply control to the Wailord. 
+
+gonna use Bryan #2's plane controller into Wailord
+
+=========================================================================
+
+Initial Scene / Model Setup
+
+Current scene setup:
+- Imported submarine model into Unity water scene
+- Selected one submarine root object as the physics body
+- Added Rigidbody to the submarine root
+- Turned off Use Gravity for early testing
+(because gravity was active, but buoyancy had not been implemented yet To debug thrust behavior first, gravity was ignored temporarily)
+- Created a Thrusters parent object
+- Created 8 empty child objects to mark the thruster locations
+- Rotated the empties to match the physical thruster placement as closely as possible
+
+Useful Rigid body setup during debugging:
+- Use Gravity = Off
+- Mass = around 100 during tests
+- Linear Damping = increased to reduce drifting
+- Angular Damping = increased to reduce flipping / over-rotation
+- Interpolate = Interpolate
+- Collision Detection = Continuous
+
+Thruster Layout Interpretation
+- Thruster 1 = front left corner
+- Thruster 2 = front left side
+- Thruster 3 = front right corner
+- Thruster 4 = front right side
+- Thruster 5 = rear left side
+- Thruster 6 = rear right side
+- Thruster 7 = rear left corner
+- Thruster 8 = rear right corner
+
+Vertical corner thrusters:
+- Thruster 1
+- Thruster 3
+- Thruster 7
+- Thruster 8
+
+Use during testing:
+- vertical movement/heave
+- later pitch and roll control
+
+Horizontal side thrusters:
+- Thruster 2
+- Thruster 4
+- Thruster 5
+- Thruster 6
+
+Use during testing:
+- forward / backward translation
+- later yaw control
+
+=========================================================================
+Duo Thruster Test
+- Test Thruster 1 and Thruster 3 together as a front pair
+- See whether a symmetric pair would move the vehicle upward more cleanly
+
+result:
+- The submarine performed a vertical loop like fucking roller coaster
+- The pair was still creating strong pitch torque
+- The main reason was likely that the corner thrusters are mounted at angles
+- Using local marker axes directly caused mismatched force directions
+- The front pair alone was not suitable for a clean heave test, I guess
+
+Four Vertical Thruster Test
+
+- Use all 4 corner thrusters together
+- Test whether the submarine can move upward in a stable way
+
+Thrusters used:
+- Thruster 1
+- Thruster 3
+- Thruster 7
+- Thruster 8
+
+result:
+- Still produced looping with a little twist
+
+Possible problem:
+- Each corner thruster is mounted at an angle
+- Using each thruster marker's local up vector meant the forces were not all truly vertical
+- This added forward/back and side components that created looping torque
+
+=========================================================================
+Continue on Four Vertical Thruster Test
+
+- Stopped using the local thruster axis for this test
+- Applied the same world-space upward force to all 4 vertical thrusters
+- Used a shared world direction instead of each marker's tilted direction
+
+result: 
+
+- The vertical loop stopped
+- The submarine mostly stayed in place horizontally
+- Y position increased slightly
+- After unfreezing X and Z rotation, X and Z positions still stayed stable
+- Only Y changed
+- Increasing the thrust force to 50 made the submarine rise about 1 unit per second
+- The 4 vertical thrusters can now produce stable upward heave
+- The earlier instability was mainly a force-direction problem, not a general physics failure
+
+========================================================================== 
+Four Horizontal Thruster Test
+
+- Test the 4 horizontal thrusters together
+- See whether the submarine can translate forward cleanly
+
+Thrusters used:
+- Thruster 2
+- Thruster 4
+- Thruster 5
+- Thruster 6
+
+result:
+- The submarine moved along the Z direction
+- X and Y stayed stable
+- Rotation changed a lot
