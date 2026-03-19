@@ -1,0 +1,213 @@
+Control Sub team research 
+========================================================================
+Research Mirco-RoS
+https://micro.ros.org/docs/overview/hardware/
+officially support Teensy 4.1 and Raspberry Pi Pico RP2040
+Seems like not officially support but community ports exist on Raspberry Pi Pico 2
+
+https://micro.ros.org/docs/tutorials/core/teensy_with_arduino/
+
+micro-ROS uses DDS-XRCE (Extremely Resource Constrained Environments) protocol and communicates with a micro-ROS Agent running on a Linux host such as Jetson Orin.
+
+========================================================================
+
+Raspberry Pi Pico 2:
+- CPU: Dual-core Arm Cortex-M33 or dual Hazard3 RISC-V @ up to 150 MHz
+- RAM: 520 KB SRAM
+- Flash: 4 MB
+- Peripherals: I2C, SPI, UART, USB 1.1
+Pico 2 specs: https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+
+Teensy 4.1:
+- CPU: ARM Cortex-M7 @ 600 MHz
+- RAM: 1 MB
+- Flash: 2 MB + optional external memory
+- Peripherals: Multiple UART, SPI, I2C, CAN, Ethernet support
+Teensy specs: https://www.pjrc.com/store/teensy41.html
+
+Seems like Teensy 4.1 is significantly faster due to higher clock speed, better core architecture, more RAM, and better micro-ROS support.
+
+========================================================================
+
+I2C:
+- Two-wire protocol
+- Good for multiple sensors, slower
+- Ideal for short distances on PCB or small robots
+https://learn.sparkfun.com/tutorials/i2c/all
+
+SPI:
+- Faster communication
+- Uses more wires 
+- Good for fast sensors, SD cards, encoders
+https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
+
+UART:
+- Best for board-to-board communication over medium distances
+- Used for Teensy ↔ Jetson Orin communication in micro-ROS (Serial transport)
+
+=======================================================================
+
+Wiring Teensy 4.1 to Jetson Orin
+Recommended method: USB connection
+- Teensy USB → Jetson Orin USB-A
+- Appears as /dev/ttyACM0
+- Supports micro-ROS serial agent
+
+Alternative: UART
+- Connect Jetson TX → Teensy RX
+- Connect Jetson RX → Teensy TX
+- Common ground required
+- Jetson UART shows up as /dev/ttyTHS* devices
+
+micro-ROS serial agent: https://micro.ros.org/docs/tutorials/core/first_application_linux/
+Jetson Orin pinout: https://developer.nvidia.com/embedded/learn/jetson-orin-nano-devkit-user-guide
+
+========================================================================
+
+Powering Jetson Orin Nano Externally
+Jetson Orin Nano Developer Kit Power Requirements:
+- Voltage input: 7–20 V DC (commonly 12 V or 19 V adapters)
+- Recommended current: 4–5 A depending on load
+
+For robotics:
+Battery → DC-DC buck/boost regulator → Orin barrel jack (12 V recommended)
+
+NVIDIA Power Guide: https://developer.nvidia.com/embedded/jetson-orin-nano-devkit-user-guide#power
+
+
+========================================================================
+Ardiuno Base Project 
+https://www.instructables.com/RC-Submari ne-Hack-Android-controller-Arduino-Andro/
+
+
+========================================================================
+Got A Arduino base Robo Car from Richard, trying to figure it out how to work
+
+Main Components
+- Arduino UNO R3 (main microcontroller board)
+- UCTRONICS UC-435 Rev.B Motor Control Shield
+- 2 DC gear motors
+- Battery pack connected to POWER IN
+- Motors connected via 4-wire white connector
+- Motor Connector Layout
+The white motor connector on the shield is labeled:
+M4- M4+ M3- M3+
+
+========================================================================
+
+Motor Driver Chip
+The shield normally uses two L293D motor driver chips.
+Each chip controls two motors.
+Chip	Controls
+IC1	M1 and M2
+IC2	M3 and M4
+From the board:
+IC1 socket is empty
+Only IC2 is installed
+Therefore:
+Motor	Status
+M1	Not usable
+M2	Not usable
+M3	Working
+M4	Possibly damaged (Since it not working at all)
+
+Arduino Pin Mapping
+The UC-435 motor shield maps motors to Arduino pins like this:
+Motor	Direction Pins	Speed (PWM) Pin
+M1	D8, D11	D9
+M2	D12, D13	D10
+M3	D4, D7	D6
+M4	D2, D3	D5
+Since M3 works, I use
+Direction: pins 4 and 7
+Speed: pin 6
+========================================================================
+
+Motor Direction Logic
+
+For DC motors:
+IN1 HIGH + IN2 LOW  → forward
+IN1 LOW + IN2 HIGH  → backward
+Speed is controlled by PWM:
+analogWrite(enablePin, speed)
+Speed range:
+0   = stop
+255 = full speed
+
+Code that works for now 
+Working Motor Test Code
+
+This code drives Motor M3 only.
+
+int M3_IN1 = 4;
+int M3_IN2 = 7;
+int M3_PWM = 6;
+
+Result:
+Motor spins forward for 2 seconds
+Then backward for 2 seconds
+Repeats forever
+
+========================================================================
+
+Current Problem  during testing:
+
+Motor on M3 spins normally
+Motor on M4 does not move at all
+No sound or vibration from M4 motor
+
+Might because of:
+
+M4 driver channel damaged
+Wiring issue inside the white connector
+Since M3 works, the driver chip is partially functional.
+
+========================================================================
+Temporary Workaround
+
+Both motors can be wired in parallel to M3 so they run together.
+
+This means:
+
+Motor A + and B + = connect to M3+
+Motor A - and B - = connect to M3-
+            
+Both motors will then move together using the same control signal.
+
+Limitations:
+Robot can only move forward/back
+Cannot turn
+
+========================================================================
+
+Decide to give up on this stupid thing and get a new Arduino kit from Amazon
+
+========================================================================
+Got this Arduino clone from amazon
+ 
+https://a.co/d/01Roj0Gj
+
+Glad it comes with instruction menu. 
+
+========================================================================
+Took a long to wired up the robo car but the car is running right now
+
+Main Components
+- a clone Arduino UNO R3
+- 2 DC gear motors
+- 2 Obstacle Avoidance Sensor 
+- 1 Ultrasonic distance Sensor 
+- breadboard Connector Layout
+
+========================================================================
+
+What the car able to do automatically: 
+
+- Driving forward autonomously
+- Detecting walls using an ultrasonic distance sensor
+- Backing away from obstacles
+- Scanning the environment to the left and right using a servo-mounted sensor
+- Choosing the direction with the most available space
+- Turning and continuing navigation through environment
+
+========================================================================

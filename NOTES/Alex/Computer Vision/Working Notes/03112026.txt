@@ -1,0 +1,157 @@
+Do not have a nvidia graphics card on laptop
+What about my PC?
+
+For now, I will use Google Colab
+
+Open Google Colab
+At the top, Runtime -> Change runtime type -> T4 GPU
+
+Clone YOLOv7
+!git clone https://github.com/WongKinYiu/yolov7
+%cd yolov7
+
+!pip install -r requirements.txt
+Error when installing due to torch version
+
+Fix:
+!pip install torch torchvision torchaudio
+!pip install numpy opencv-python pillow pyyaml tqdm seaborn pandas
+
+install extras:
+!pip install matplotlib ipython
+
+verify it works:
+import torch
+print(torch.__version__)
+print(torch.cuda.is_available())
+
+should say 'true'
+
+Run this horse test to double check!:
+!python detect.py --weights yolov7.pt --source inference/images/horses.jpg
+
+Nevermind, does not work.
+
+why
+
+Fix:
+content/yolov7/models/experimental.py
+change line 252
+ckpt = torch.load(w, map_location=map_location)
+to
+ckpt = torch.load(w, map_location=map_location, weights_only=False)
+
+Okay, so the data sharing folder for RoboSub is like 80 gb and my chud laptop cannot handle that lol so time to mount
+
+Bro.
+
+Ok so idk where i was. 
+
+I ended up trying to mount and i wasnt doing great so i switched.
+
+# upload video
+
+from google.colab import files
+
+uploaded = files.upload() # upload vid
+
+Upload the .MTS vid
+
+Make a new directory
+!mkdir frames
+!ffmpeg -i '00027 torpedo.MTS' -vf fps=1 frames/frame_%04d.jpg
+
+Check to see if it is loaded correctly:
+!ls frames | head
+!ls frames | wc -l
+
+Then we extract the frames:
+# extract the frames from the vid
+
+import os
+
+# create folder structure
+os.makedirs("robosub_dataset/images/train", exist_ok=True)
+os.makedirs("robosub_dataset/images/val", exist_ok=True)
+os.makedirs("robosub_dataset/labels/train", exist_ok=True)
+os.makedirs("robosub_dataset/labels/val", exist_ok=True)
+
+print("YOLO folders ready")
+
+Move frames to correct folder:
+import shutil
+
+# Move all frames to images/train
+for f in os.listdir("frames"):
+    if f.endswith(".jpg"):
+        shutil.move(os.path.join("frames", f), "robosub_dataset/images/train/")
+
+print("Frames moved to images/train")
+
+Now, we have to label our images. How?
+Well, lets go to our Konsole or terminal:
+sudo apt update
+sudo apt install python3-pip -y
+
+If there s an error about the disc label of 'Kubuntu 22.04.5 LTS _Jammy Jellyfish', then we need to fix it.
+
+sudo nano /etc/apt/sources.list
+
+Comment out any lines starting with 
+deb cdrom:[Kubuntu 22.04.5 LTS...]
+I only had 1 line, I think line 1 or 2.
+Then hit Ctrl + O, which writes file, then press Enter.
+It should say the write was successful or something similar. 
+
+Run again:
+sudo apt update
+sudo apt install python3-pip -y
+
+If there is an issue with the database being locked check it out
+It should have a pid # such as pid 11077
+
+Run:
+ps -p 11077 -o pid,cmd
+
+If it says apt install python3.pip-y it is safe to terminate as it is our own process.
+
+Run:
+sudo kill -9 11077
+ps -p 11077
+
+The pid should be gone!
+
+Now, run:
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/lib/dpkg/lock-frontend
+sudo rm /var/cache/apt/archives/lock
+sudo dpkg --configure -a
+sudo apt update
+sudo apt install python3-pip -y
+
+All for the pip. 
+
+Verify:
+pip3 --version
+
+Finally we can install LabelImg to start labeling our dataset!:
+pip3 install labelImg
+
+Option 1:
+labelImg ~/Videos/robosub_dataset/images/train
+
+Doesn't work?
+
+Option 2:
+ls ~/.local/bin/labelImg
+~/.local/bin/labelImg ~/Videos/robosub_dataset/images/train
+
+Laptop abt to die but now its time to label the workflow and such.
+
+Summary: 
+- video uploaded
+- frame extracted
+- created yolov7 file structure
+- labelimg and pip installation/fixes
+- next: label images
+Then it is ready for yolov7 training with .yaml
