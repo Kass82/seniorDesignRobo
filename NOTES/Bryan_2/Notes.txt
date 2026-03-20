@@ -246,4 +246,12 @@ I am currently having issues with:
 
 This is the current technical step I am working through so that the older movement/gravity system can potentially be reused or adapted for RoboSub simulation.
 
+We have now started to add some gravity to the Submarine, I started doing some research on how to add in Grativy into unity and saw a YT video how to code in gravity while coding in gravity another yt video after 10+ videos show us how to add Gravity thats already installed by going to the object and adding it in. 
+
+We then added the movement from the Game I created into someone elses laptop that has the semi built simulation but there was a problem the code we placed into the sub doesnt wanted to work but it works in the game , we went and looked into it but it just doesnt want to move the sub but works for the games vehicle. 
+
+*Find a solution on how to make the sub move with the codes I created
+*Or Remake the movement code from scratch
+
+
 ---
