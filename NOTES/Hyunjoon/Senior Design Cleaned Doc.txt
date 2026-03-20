@@ -1,0 +1,33 @@
+# Project Development Timeline: Simulation & Environment Setup
+
+## September 2025: Initial Setup
+*   **09/28/2025:** Downloaded and prepared Kubuntu 22.04.5 LTS for the primary development environment.
+
+## October 2025: The ROS2 & Gazebo Phase
+*   **10/03/2025:** Evaluated Unreal Engine vs. Gazebo for ROS2 compatibility. Decided to proceed with ROS2 Humble and Gazebo Fortress.
+*   **10/06/2025 - 10/08/2025:** Successfully installed ROS2 Humble and Gazebo Fortress. Verified installations using standard ROS2 Turtle Sim and `ign gazebo` test
+				 environments.
+*   **10/10/2025:** Evaluated migrating to ROS2 Iron. Researched AI-to-AI communication protocols. Realized the high complexity of full-system simulation. 
+*   **10/22/2025:** Began custom Gazebo environment development using XML. Encountered initial difficulties with world generation.
+*   **10/24/2025 - 10/29/2025:** Retrieved the "Wailord" submarine 3D model. Attempted conversion to URDF via Onshape, resulting in incomplete mesh exports (only exporting single components). Evaluated Solidworks Connected as an alternative. Discovered comprehensive 15-hour Gazebo/ROS2 tutorial course for reference.
+
+## November 2025: Milestones & Web App Implementation
+*   **11/07/2025:** Began setup for the project website. Resolved initial Node Package Manager (npm) audit failures using `--force` legacy installs.
+*   **11/14/2025:** **Milestone Achieved:** A team member successfully rendered the complete submarine model within Gazebo, despite high hardware resource usage. 
+    *   *Web App Update:* Resolved missing React dependencies by switching to `git clone` for repository retrieval and forcing npm installs.
+*   **11/17/2025:** Continued XML environment development. Attempted to generate a contained "water box" environment but encountered severe rendering/visibility bugs (black screen/no lighting).
+
+## December 2025: Gazebo Roadblocks
+*   **12/02/2025:** Identified critical blockers with Gazebo. Custom XML environments failed to render light sources. Furthermore, required buoyancy plugins and standard pool environments were discovered to be deprecated and broken due to Gazebo's web and namespace migrations. Development in Gazebo halted.
+
+## January 2026: UI Development
+*   **01/05/2026:** Prototyped base CSS styling for the project website while simulation progress remained stalled.
+
+## February 2026: The Unity Migration & Pipeline Errors
+*   **02/11/2026:** **Major Pivot:** Officially abandoned Gazebo and transitioned the simulation environment to Unity.
+*   **02/18/2026:** Tristen assigned to model porting. Began reviewing tutorial documentation for Unity water physics. 
+*   **02/19/2026 - 02/26/2026:** Development halted by a critical, persistent Unity Universal Render Pipeline (URP) compiling error (`CS0246: MaterialReferenceChanger`). Standard troubleshooting (reinstalling packages, deleting library caches, utilizing standard editor uninstallers) proved ineffective across multiple fresh project iterations.
+
+## March 2026: Unity Resolution & Physics Setup
+*   **03/01/2026:** **Blocker Resolved:** Successfully cleared the Unity URP error by executing a complete "nuclear" system purge (wiping all local, hidden `%appdata%`, and cache Unity directories, followed by a completely fresh installer download). 
+*   **03/04/2026:** Team aligned on next steps. Bryan#2 successfully recovered uncorrupted baseline code from a previous jet project to serve as the foundation for the submarine's movement controls. Current team focus shifted entirely to rebuilding and integrating Unity water physics.

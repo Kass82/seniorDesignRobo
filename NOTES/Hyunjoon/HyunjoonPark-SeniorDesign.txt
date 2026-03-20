@@ -1,0 +1,162 @@
+9/28/2025 1:45pm
+-------------------------------------
+-Downloaded Kubuntu 22 as said from last discussion I was part of. As soon as I searched Kubuntu 22,
+it gave me 22.04.5 LTS as the first option. Unsure if there's a specific Kubuntu22 version I need but
+might as well download this one and ask it this upcoming Friday.
+
+10/3/2025 - Meeting
+-----------------------------------------
+-See if Unreal Engine and ROS2 compatibility
+-Try out Gazebo (designed to work with ROS2 Humble)
+-Install Gazebo Fortress and ROS2 Humble
+
+10/6/2025
+--------------------------------------------------
+- INSTALLED GAZEBO AND ROS2 AND TRIED OUT THE TURTLE SIM USING ROS2 ENGINE TO MAKE SURE INSTALLATION WAS CORRECT.
+- FOR ROS2 HUMBLE INSTALLATION GUIDE, WENT TO THIS WEB ADDRESS: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+- FOR GAZEBO FORTRESS INSTALLATION GUIDE, WENT TO THIS WEB ADDRESS:
+https://jeremypedersen.com/posts/2024-07-17-gazebo-ros-install
+- DID A QUICK TEST FROM https://jeremypedersen.com/posts/2024-07-17-gazebo-ros-install WHICH SHOWS GAZEBO WORKING BY SHOWING SHAPES ON THE SCREEN AND OPENING GAZEBO.
+- NEXT GOAL IS TO TEST EVERYTHING WORKING FINE BY FOLLOWING TUTORIAL
+
+-Dates Unknown (forgot to start writing notes so uh, good job me, at least going to link what websites I went to
+			   for all installations that have been made. The dates that have discord written on them are the dates
+			   the group talked about said things written therefore are not accurate but works as placeholders.)
+-----------------------------------------------------------------------------------------------------------------------------------------
+10/8/2025(Discord):
+
+- Installing ROS2 Humble, went to the official ROS2 Documentation for Humble for instalation guides:
+	-https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+- Installing Gazebo Fortress for ROS2 Humble, went to official Documentations for Gazebo:
+	-https://gazebosim.org/docs/latest/ros_installation/
+	-https://jeremypedersen.com/posts/2024-07-17-gazebo-ros-install
+-Tested this by doing turtle sim to make sure ROS2 was installed correctly and opened gazebo to make sure gazebo ran
+ properly.
+	-To do this, I ran Konsole and inputed the command: ign gazebo
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+10/10/2025 - MEETING
+----------------------------------------------------------------
+- ROS2 IRON NEED TO INSTALL
+- FIND GAZEBO THAT WORKS HAND IN HAND WITH ROS2 IRON
+- https://docs.ros.org/en/foxy/Tutorials/Intermediate/URDF/URDF-Main.html
+- https://docs.ros.org/en/iron/Tutorials/Advanced/Simulators/Gazebo/Gazebo.html
+- LOOKS LIKE SIMULATION IS MORE IMPORTANT THAN I THOUGHT
+- GOOD GOD, A WORKING SIMULATION WITH ALL COMPONENTS IS GOING TO BE ROUGH
+- TRY TO LOOK INTO AI SOFTWARE THAT CAN BE CREATED OR WORK WITH MACHINE LEARNING AND SEE IF THERE'S ANY WAY TO MAKE TWO AIS COMMUNICATE WITH EACH OTHER AS IF THEY WERE IN A CALL TALKING TO EACH OTHER.
+- RESEARCH ON ON IRON AND HUMBLE AND SEE WHAT IS BETTER IN HUMBLE (OTHER THAN EOL'D) SEE HOW TO UPGRADE.
+
+10/22/2025(Discord):
+
+-Continued to play around with gazebo and found out from a quick search on the internet asking "what language is used
+ to make a gazebo project" that it's XML coded files to create these said projects.
+-tried to create and work on a gazebo project file. Ended in failure as I couldn't figure out how the hell this
+ thing reads and generates things in the project. Will have to do more research to create anything.
+-----------------------------------------------------------------------------------------------------------------------------------------
+10/24/2025(Discord):
+
+-found a model for the submarine in the old discord!
+-we tried uploading this to Onshape website to try and convert the files to URDF but ended in failure.
+-constantly only getting 1 piece of the wailord instead of the entire model
+-----------------------------------------------------------------------------------------------------------------------------------------
+10/29/2025-11/5/2025 (Discord):
+
+-Continuing to try and get the model to work on gazebo. This time, we were recommended to use solidworks connected
+-told me I don't got access to solidworks so uh, gg on that I guess? I'll ask next meeting (completely forgot to
+ ask, good going me)
+-Still trying to get the model to goddamn work on gazebo. Biggest hurdle of my goddamn life.
+-Others have also been attempting to get the model to work on gazebo but haven't found any success.
+-Bright note, we have found a tutorial on Gazebo and ROS2! Although it's for a different version of ROS2 and Gazebo
+ from what we use, it's still something to base off of and if anything, we can see if we can translate some things
+ over to the version we're using! 14-15 hour course though and 8GB of downloading videos and materials....This
+ might take a bit...
+-----------------------------------------------------------------------------------------------------------------------------------------
+11/7/2025 (Discord):
+-Downloading the website from the github from last year that we got!
+-npm install doesn't work so auditing it is
+-npm audit fix says to do --legacy or --force; let's try --legacy first
+-legacy did not work so we're forcing it
+-alright, with npm install --force the website seems to start up with npm start perfectly fine!
+-----------------------------------------------------------------------------------------------------------------------------------------
+11/14/2025 3:59pm
+
+-Team member got the model into gazebo! HURAHHHHHH
+-Apparently their laptop hates it and makes the fans go on overdrive but it's there with all the parts!
+-Our next goal is going to be to make a box with water in it but let's take it step by step and just create a box
+ (aka 4 walls connected together)
+-I'll work more on this at another time and will work on the powerpoints with the bois for now :3
+-Website files for some reason gone so redownloaded now it no work. Bullshit
+-Says I'm missing react file to launch the web. Odd
+-Kassandra has told me to try git clone therefore we try. Looks different.
+-Normal npm install still didn't work therefore we instantly move to --force instead to force install
+-HOLY IT WORKED. Although, I'm not sure what is so different since the only new file I saw was the .gitignore; perhaps
+ the gitignore file is more important than we thought
+-Correction to thought, it might have to do with directories. I might've perhaps downloaded it in Documents last time
+ but this time I downloaded it in Downloads and that might have to do with what's happened.
+
+ 11/17/2025
+
+ -Tried making another XML file to generate the world with a box with the help of the internet and AI.
+ -Ended in failure because you cannot see shit. Like I feel like I see some shit but I also don't see shit. It does say we have stuff on the side bar though.
+ -Couldn't figure it out. I'll come back to this.
+ -----------------------------------------------------------------------------------------------------------------------------------------
+ 12/2/2025
+
+ -Been a little bit but I'll try to do this again.
+ -This time, since I couldn't figure it out, I tried making an empty project on gazebo.
+ -well, there's light in this one so I can see.
+ -Dawg, when I use XML to code up the file, the sun doesn't exist and when it does, it's still just black.
+ -I don't know anymore, gazebo is ass.
+ -I really don't know anymore, I even tried asking AI for help on making this visible and they did edit the file but there's no light in the project still. I think we've hit a dead end on this. Doesn't look like any of us were able to even figure out how to make water physics.
+ -There's a buoyancy plugin but it's deprecated because they moved websites and for some reason, the code is still pointing to the old one or something and we can't find it on the new website making it just not work.
+ -There's a project that's generated as an example with a sub or something in a swimming pool!
+ -It won't even open because of the website movement for gazebo's stuff. Great. There goes all that. I don't know. I'm done for today.
+ -----------------------------------------------------------------------------------------------------------------------------------------
+1/5/2026:
+- Made some base shit website to try out the CSS style. Haven't really done much else. Gazebo lookin' more and more grim, won't lie.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/11/2026:
+- We're getting the fuck off of Gazebo and are moving to Unity. Hopefully this is the correct move and will help us move more forward in the Simulation section.
+- I have been fighting random uninstallations and other compiling errors with unity since last semester. Hopefully this time, it won't fight back as much.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/18/2026:
+- Ok, time to start the unity project. Tristen said he'll try to get the model into unity so I'll start by learning some things for water physics. There are youtube tutorials Bryan#2 put out for us to watch, maybe start there as he said his water physics files got corrupted because of course they did. Unity is so ass.
+- Ok, watched around 4 of the videos for the tutorial playlist. I'll take a break for now.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/19/2026:
+- I am starting to get tired of this STUPID UNITY PIECE OF FUCK. It has been giving me the same exact error for literally yesterday night. Same error every time: Library\PackageCache\com.unity.render-pipelines.universal@7327e77c1cc2\Editor\Tools\Converters\ReadonlyMaterialConverter\ReadonlyMaterialConverter.cs(159,18): error CS0246: The type or namespace name 'MaterialReferenceChanger' could not be found (are you missing a using directive or an assembly reference?). IT'S A FRESH FUCKING PROJECT. INTERNET IS USELESS AS PEOPLE WHO SEEMED TO HAVE HAD THE SAME PROBLEM GOT IT FIXED BY DOING SOME RANDOM ASS STUFF THAT I HAVE ALSO TRIED NOW. Surely there is a consistent fix. I'll look for one later as I'm quite heated and pissed off from this. Absolutely hate Unity.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/20/2026:
+- I literally deleted the library to force install the library again. Did not work. It would seem I can get 1 year of Google Gemini's paid plan for free due to being a student. Lemme use that and see if gemini can help fix this issue.
+- It did not. Gave me the same exact solution I just tried aka bomb the library and force the project to reinstall. Guess I'll make ANOTHER fresh project and see.
+- Seems like every single fresh project is getting the same error so maybe Unity Editor version got installed incorrectly. I'll try uninstalling and reinstalling. If this doesn't work not sure.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/24/2026:
+- Happy Birthday to me. Unity sure as hell isn't congratulating me cause IT'S STILL GIVING ME THE SAME STUPID ERROR. I have tried reinstalling the goddamn editor and that took a good ass minute to do because these editors aren't small. I don't know anymore. I'm going to bomb nuke every single Unity file and try reinstalling the Unity Hub with the installer again.
+
+- Yeah no. Of course, it didn't work. I really don't know anymore. I'm fucking leaving this for now.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2/26/2026:
+- Had a few things to do so I haven't been able to come back to this for a bit. I want to say I don't know what's happening anymore. Internet has told me the same answers over and over again. Uninstall the URP package and reinstall it. I did. Nothing happened. Make the URP package a custom one. I did, nothing happened in fact, this gave me more compiling errors than the singular one. I have quite literally nuked the thing and it's still causing me trouble. I don't know anymore.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3/1/2026:
+- GUYS I FUCKING DID IT. I NUKED EVERYTHING DOWNLOADED THE UNITY HUB INSTALLER 3 DIFFERENT TIMES AND SUDDENLY IT WORKED TODAY. NO MORE Library\PackageCache\com.unity.render-pipelines.universal@7327e77c1cc2\Editor\Tools\Converters\ReadonlyMaterialConverter\ReadonlyMaterialConverter.cs(159,18): error CS0246: The type or namespace name 'MaterialReferenceChanger' could not be found (are you missing a using directive or an assembly reference?) ERROR. IT'S BEEN FIXED. I AM FREE. I CAN FINALLY WORK ON THIS THING. But it's getting pretty late so it's a tomorrow thing. I'll share the news with everyone tomorrow :D. Haven't been doing anything for the website though since I've been focused on just getting Unity working. Unsure why it suddenly wanted to work? But the quickest fix for anyone in the future if they have this issue might be:
+	- Bomb Nuke EVERY SINGLE unity folder. Even the ones hidden in %appdata%.
+	- Uninstall unity hub.
+	- Delete your installer that you installed.
+	- Go back to the internet and search "Unity installer"
+	- Download from the official Unity page like you did before and hope to god it's not corrupted or something.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3/4/2026:
+- Seems like we're starting to see what to do. Bryan#2 seems to have a past project that has some kind of similarity for controls (a jet). We can use that as a base for movement tech. I told the rest of us to focus on getting water physics ready for it for testing. So far, I feel like motivation is at an all time high although the only problem for me is actual IRL stuff getting in my way atm. It's fine, I'll just find time to do something in the small bits of time I have.
+- Bryan#2 got his old stuff running without corruption. This is good news. We'll try and update that while we try and make the water physics work. Bryan#2 said he got the water physics to work but it got corrupted.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
