@@ -1,3 +1,45 @@
+10/10/25-10/31/25
+
+Learning about CNNs:
+
+https://www.youtube.com/watch?v=YRhxdVk_sIs
+
+https://cs231n.github.io/convolutional-networks/?utm_source=chatgpt.com
+
+https://towardsdatascience.com/convolutional-neural-networks-explained-9cc5188c4939/ (Need to sign into a account)
+
+
+What I learned from that:
+
+-CNNs are neural networks designed specifically for image data, keeping the structure (height, width, channels) instead of flattening everything.
+
+-The key operation is convolution, where small filters slide across the image to detect patterns like edges and textures.
+
+-Early layers detect simple features (edges), while deeper layers combine them into complex objects (like buoys or gates).
+
+-CNNs use local connections, meaning each neuron only looks at a small part of the image instead of the whole thing.
+
+-The same filter is reused across the image (parameter sharing), allowing detection of features anywhere in the image.
+
+-A typical CNN flow is: Input → Convolution → ReLU (activation) → Pooling → Fully Connected Layer → Output.
+
+-ReLU activation adds non-linearity, helping the network learn more complex patterns.
+
+-Pooling layers reduce the image size while keeping important information, making the model faster and more efficient.
+
+-Important parameters in CNNs include filter size, stride, and padding, which control how the filter moves and how the output is shaped.
+
+-CNNs learn visual features automatically layer by layer, making them powerful for tasks like object detection
+
+
+
+
+Used this to train a CNN and understand how it works: 
+
+https://docs.pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+
+
+
 The YOLOv7 repository was downloaded from GitHub in order to obtain the scripts required to run object detection.
 
 Command used:
