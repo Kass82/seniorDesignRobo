@@ -1,0 +1,418 @@
+=========================================================================
+ROBOSUB UNITY SIMULATION DOCUMENTATION
+=========================================================================
+
+1. PROJECT GOAL
+
+The goal of this Unity work is to build a controllable simulation of the
+submarine so the 8-thruster layout, movement behavior, and overall physics
+can be tested before moving into more advanced underwater simulation.
+
+Main goals so far:
+- import the submarine model into Unity
+- set up a Rigidbody-based submarine
+- test the 8 thrusters in groups
+- validate forward motion, vertical motion, and yaw
+- build a working live control system
+
+
+=========================================================================
+2. INITIAL SCENE AND MODEL SETUP
+=========================================================================
+
+The submarine model was imported into a Unity water scene. A single root
+object was chosen to act as the main physics body, and a Rigidbody was
+added to that root object.
+
+For early testing:
+- gravity was turned off
+- a Thrusters parent object was created
+- 8 empty child objects were added to mark the thruster locations
+
+Gravity was disabled at this stage because buoyancy had not been added
+yet, and the first priority was to debug thruster behavior.
+
+Early debug Rigidbody settings:
+- Use Gravity = Off
+- Mass around 100
+- Linear Damping increased to reduce drifting
+- Angular Damping increased to reduce flipping and over-rotation
+- Interpolate = Interpolate
+- Collision Detection = Continuous
+
+
+=========================================================================
+3. THRUSTER LAYOUT
+=========================================================================
+
+The 8 thrusters were separated into two main groups.
+
+Vertical corner thrusters:
+- Thruster 1 = front left corner
+- Thruster 3 = front right corner
+- Thruster 7 = rear left corner
+- Thruster 8 = rear right corner
+
+Main purpose:
+- heave (up/down)
+- later pitch / roll support
+
+Horizontal side thrusters:
+- Thruster 2 = front left side
+- Thruster 4 = front right side
+- Thruster 5 = rear left side
+- Thruster 6 = rear right side
+
+Main purpose:
+- surge (forward/backward)
+- yaw control
+
+
+=========================================================================
+4. EARLY VERTICAL THRUSTER TESTING
+=========================================================================
+
+The first vertical tests used the front pair of vertical thrusters and
+later all 4 vertical corner thrusters together.
+
+Observed problem:
+- the submarine performed vertical loops
+- it also twisted instead of moving cleanly upward
+
+Main issue found:
+- the corner thrusters were mounted at angles
+- using each thruster marker's local axis directly caused force directions
+  to mismatch
+
+Fix:
+- instead of using each thruster's tilted local axis, the same shared
+  world-space upward force was applied to all 4 vertical thrusters
+
+Result:
+- the vertical looping stopped
+- horizontal drift mostly disappeared
+- only Position Y increased
+- the 4 vertical thrusters could now produce stable upward motion
+
+Conclusion:
+- the main problem was force direction, not a general physics failure
+
+
+=========================================================================
+5. EARLY HORIZONTAL THRUSTER TESTING
+=========================================================================
+
+The first horizontal test used all 4 horizontal thrusters together.
+
+Observed result:
+- the submarine moved in the Z direction
+- this showed that forward translation was working
+- but it also rotated strongly on Y
+
+To isolate the problem:
+- Rotation X and Z were frozen
+- Rotation Y was left free
+
+Conclusion:
+- forward force was working
+- the main remaining problem was yaw imbalance
+
+
+=========================================================================
+6. HORIZONTAL PAIR ISOLATION
+=========================================================================
+
+The 4 horizontal thrusters were split into front and rear pairs.
+
+Front pair:
+- Thruster 2
+- Thruster 4
+
+Result:
+- Y rotation changed only slightly
+- Z movement was normal
+
+Rear pair:
+- Thruster 5
+- Thruster 6
+
+Result:
+- Y rotation changed dramatically
+- Z movement still happened normally
+
+This showed that the rear pair was causing most of the yaw problem.
+
+Extra checks:
+- Thruster 5 and 6 positions were checked and appeared symmetric
+- Rigidbody center of mass was manually set to (0,0,0)
+- this did not fix the issue
+
+Conclusion:
+- the problem was not only marker placement
+- it was more related to force direction, scale, or overall setup
+
+
+=========================================================================
+7. MAJOR SCALE PROBLEM DISCOVERED
+=========================================================================
+
+At one point, the submarine model was scaled to 1000,1000,1000 to better
+match the size of the ocean scene.
+
+This turned out to be a major problem because the oversized scale made the
+physics behavior unreliable. Thruster forces and torque were being
+exaggerated, which likely made the earlier spinning and yaw problems worse.
+
+Decision:
+- keep the main script logic
+- retune the system after fixing scale
+- re-test instead of rewriting everything from zero
+
+
+=========================================================================
+8. RETESTING AFTER SCALE AND TUNING CLEANUP
+=========================================================================
+
+After the scale issue was corrected and the force values were retuned,
+the submarine behavior improved significantly.
+
+Horizontal retest:
+- Position X did not change
+- Position Y did not change
+- Position Z changed
+- Rotation X changed very slowly
+- Rotation Y changed only slightly
+- Rotation Z did not change
+
+Conclusion:
+- horizontal thrusters now produced mostly clean forward movement
+
+Vertical retest:
+- Position X did not change
+- Position Z did not change
+- Position Y changed
+- Rotation X changed very slowly
+- Rotation Y did not change
+- Rotation Z changed only slightly
+
+Conclusion:
+- vertical thrusters now produced mostly clean heave
+
+Overall conclusion:
+- the system was no longer broken
+- major looping and spinning problems were reduced to small tuning issues
+
+
+=========================================================================
+9. YAW-ONLY TEST
+=========================================================================
+
+A yaw-only test was run using the horizontal thrusters.
+
+Observed result:
+- the submarine rotated on Y
+- yaw control existed
+- but turning stopped around 90 degrees
+
+Reason:
+- the test used a stored starting forward direction
+- this was stable for debugging
+- but not good for continuous turning
+
+Conclusion:
+- yaw existed
+- a better mixer was needed for continuous turning
+
+
+=========================================================================
+10. FIRST 3-AXIS MIXER
+=========================================================================
+
+A basic mixer was built with three commands:
+- Surge = forward / backward
+- Heave = up / down
+- Yaw = turn left / right
+
+Thruster usage:
+- Vertical thrusters 1, 3, 7, 8 handled heave
+- Horizontal thrusters 2, 4, 5, 6 handled surge and yaw
+
+Validation results:
+- Surge-only caused only Position Z to increase
+- Heave-only caused only Position Y to increase
+- Yaw-only caused only Rotation Y to increase, but it still stopped near
+  90 degrees
+
+Conclusion:
+- the mixer worked
+- yaw still needed improvement
+
+
+=========================================================================
+11. COMBINED MIXER TESTING
+=========================================================================
+
+The mixer was tested with combinations of surge, heave, and yaw.
+
+Results:
+- Surge + Heave worked together
+- Surge + Yaw worked together
+- Heave + Yaw worked together
+- Surge + Heave + Yaw all worked together
+
+Conclusion:
+- the mixer could combine commands successfully
+- continuous yaw was still the main remaining issue
+
+
+=========================================================================
+12. LIVE BODY-AXIS MIXER
+=========================================================================
+
+The frozen starting forward direction was replaced with the submarine's
+current live forward direction.
+
+Result:
+- yaw-only could now rotate continuously
+- the submarine could rotate past 90 degrees
+- full 360-degree turning became possible
+
+Additional result:
+- Surge-only still worked
+- Surge + Yaw also worked
+
+Conclusion:
+- the continuous yaw problem was solved
+- remaining issues became trim and balance tuning
+
+
+=========================================================================
+13. SURGE TRIM TUNING
+=========================================================================
+
+Goal:
+- make surge-only motion travel straight with minimal X drift and minimal
+  Y rotation
+
+Final surge trim:
+- Left Surge Multiplier = 1.0
+- Right Surge Multiplier = 1.457
+
+Result:
+- surge-only motion became almost pure Z motion
+- Position X drift was removed
+- unwanted Y rotation was nearly removed
+
+Conclusion:
+- forward motion became stable and straight
+
+
+=========================================================================
+14. YAW TRIM TEST
+=========================================================================
+
+Yaw trim was tested after surge trim was applied.
+
+Result:
+- yaw-only caused only Rotation Y to increase
+- no noticeable position drift
+- Left Yaw Multiplier = 1.0
+- Right Yaw Multiplier = 1.0 worked correctly
+
+Conclusion:
+- yaw trim did not need adjustment
+
+
+=========================================================================
+15. INPUT SYSTEM CONTROL SETUP
+=========================================================================
+
+Unity's Input System was added to allow live control.
+
+Current key mapping:
+- W / S = surge forward / backward
+- Space / Left Ctrl = heave up / down
+- Q / E = yaw left / right
+
+Result:
+- all controls worked correctly in play mode
+
+
+=========================================================================
+16. YAW SPEED IMPROVEMENT
+=========================================================================
+
+After live controls were added, yaw rotation felt too slow.
+
+Problem found:
+- increasing yaw multiplier alone did not help much because the commands
+  were being clamped
+
+Fix:
+- horizontal force was separated into:
+  - Surge Thrust Force
+  - Yaw Thrust Force
+
+This allowed:
+- forward speed to stay slower
+- turning speed to become much faster
+
+
+=========================================================================
+17. CURRENT WORKING CONTROL SETUP
+=========================================================================
+
+Rigidbody:
+- Mass = 100
+- Linear Damping = 3
+- Angular Damping = 0.5
+- Use Gravity = Off
+- Interpolate = Interpolate
+- Collision Detection = Continuous
+
+Constraints:
+- Freeze Rotation X = On
+- Freeze Rotation Z = On
+- Freeze Rotation Y = Off
+
+Force settings:
+- Surge Thrust Force = 2
+- Yaw Thrust Force = 50
+- Vertical Thrust Force = 2
+
+Trim settings:
+- Left Surge Multiplier = 1.0
+- Right Surge Multiplier = 1.457
+- Left Yaw Multiplier = 1.0
+- Right Yaw Multiplier = 1.0
+
+Current behavior:
+- Surge-only = only Position Z increases
+- Heave-only = only Position Y increases
+- Yaw-only = only Rotation Y increases
+- Continuous yaw works
+- Controls are stable and pilotable for the current test phase
+
+
+=========================================================================
+18. CURRENT PROJECT STATUS
+=========================================================================
+
+At this stage:
+- the submarine is controllable in Unity
+- the 8-thruster layout has been successfully grouped and tested
+- major looping and spinning problems have been reduced to tuning issues
+- surge, heave, and yaw all work
+- continuous turning works
+- forward motion has been trimmed to move mostly straight
+- gravity remains off
+- buoyancy has not been fully integrated yet
+
+Likely next phase:
+- camera improvements
+- buoyancy / neutral buoyancy
+- more realistic underwater behavior
+- later pitch / roll control
+- power estimation
+
+=========================================================================
