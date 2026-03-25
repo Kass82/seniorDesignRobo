@@ -135,5 +135,365 @@ Thrusters used:
 
 result:
 - The submarine moved along the Z direction
+
+=========================================================================
+
+Continue on Four Horizontal Thruster Test
+
+- Temporarily froze Rotation X and Z
+- Left Rotation Y free
+- Goal was to isolate yaw and remove pitch/roll from the test
+
+result:
+- Submarine still moved on Z
+- Rotation Y changed a lot
+- This showed that the horizontal thrusters were producing forward force correctly
+- The main remaining issue was yaw imbalance, not pitch or roll
+
+=========================================================================
+
+Horizontal Pair Test
+
+- Split the 4 horizontal thrusters into pairs
+- The goal was to find which pair was causing the yaw imbalance
+
+Front pair tested:
+- Thruster 2
+- Thruster 4
+
+result:
+- Y rotation only increased slightly
+- Z position increased normally
+- Front pair was mostly okay
+
+Rear pair tested:
+- Thruster 5
+- Thruster 6
+
+result:
+- Y rotation increased a lot
+- Z position still increased
+- The rear pair was the main problem pair
+
+Follow-up checks:
+- Checked Thruster 5 and Thruster 6 positions
+- Their positions looked symmetric
+- Tried manually setting the Rigidbody center of mass to (0,0,0)
+- Did not fix the rear yaw issue
+
+Conclusion:
+- The problem was not just the marker position
+- The problem was more related to force direction/scale / overall setup
+
+=========================================================================
+
+My dumbass thinks making the model scale larger is a good idea
+
+- thought the submarine model was way too small compared to the ocean map
+- Model scale had been increased to 1000,1000,1000
+
+Important realization:
+- This huge scale likely made the physics results unreliable
+- Thruster forces and torque behavior were being exaggerated
+- Earlier weird spinning/yaw issues were probably made worse by the oversized scale
+
+- Keep the script logic
+- Retune the force values after fixing the scale
+- Re-test instead of rewriting everything from zero
+
+=========================================================================
+
+Retest After Scale / Tuning Cleanup
+
+Horizontal thruster test:
+- With force 5
+- Position X did not change
+- Position Y did not change
+- Position Z changed
+- Rotation X changed very slowly
+- Rotation Y changed only slightly
+- Rotation Z did not change
+
+- Horizontal thrusters now produce mostly clean forward movement
+
+Vertical thruster test:
+- With force 5
+- Position X did not change
+- Position Z did not change
+- Position Y changed
+- Rotation X changed very slowly
+- Rotation Y did not change
+- Rotation Z changed only slightly
+
+- Vertical thrusters now produce mostly clean heave
+
+Overall:
+- This was a major improvement compared to the earlier looping tests
+- System was no longer broken
+- Remaining issues became small tuning issues instead of major physics problems
+
+=========================================================================
+
+Yaw-Only Test
+
+- Used horizontal thrusters only
+- Goal was to see if the submarine could turn left/right cleanly
+
+result:
+- Sub rotated on Y
+- Yaw existed and worked
+- But the sub stopped rotating around 90 degrees
+
+Reason:
+- The test used a stored starting forward direction
+- Good for stable debugging
+- Not good for continuous turning
+
+- Yaw control existed
+- Needed a better live mixer for continuous turning
+
+=========================================================================
+
+First 3-Axis Mixer Test
+
+Built a simple mixer with 3 commands:
+- Surge = forward/backward
+- Heave = up / down
+- Yaw = turn left/right
+
+Thruster usage:
+- Vertical thrusters 1, 3, 7, 8 for heave
+- Horizontal thrusters 2, 4, 5, 6 for surge and yaw
+
+Single-axis test results:
+
+Test 1:
+- surge = 1
+- heave = 0
+- yaw = 0
+
+result:
+- Only Position Z increased
+- Rotation Y increased only very slightly
+
+Test 2:
+- surge = 0
+- heave = 1
+- yaw = 0
+
+result:
+- Only Position Y increased
+
+Test 3:
+- surge = 0
+- heave = 0
+- yaw = 1
+
+result:
+- Only Rotation Y increased
+- Still stopped near 90 degrees
+
+- Surge worked
+- Heave worked
+- Yaw existed
+- Need an improved yaw model for continuous turning
+
+=========================================================================
+
+Combined Mixer Tests
+
+Test 4:
+- surge = 1
+- heave = 1
+- yaw = 0
+
+result:
+- Position Y and Z increased
+- Rotation Y changed only slightly
+
+Test 5:
+- surge = 1
+- heave = 0
+- yaw = 0.5
+
+result:
+- Position Z increased
+- Rotation Y increased until around 90
+
+Test 6:
+- surge = 0
+- heave = 1
+- yaw = 0.5
+
+result:
+- Position Y increased
+- Rotation Y increased until around 90
+
+Test 7:
+- surge = 1
+- heave = 1
+- yaw = 0.5
+
+result:
+- Position Y and Z increased
+- Rotation Y increased past 90 to around 114
+
+- Mixer could combine commands successfully
+- The main remaining issue was continuous yaw behavior
+
+=========================================================================
+
+Live Body-Axis Mixer
+
+- Replaced the frozen starting forward direction
+- Horizontal thrusters now use the submarine's current live forward direction
+- This allowed yaw to keep working as the sub rotated
+
+Results:
+
+Yaw-only:
+- Only Rotation Y increased
+- It could rotate continuously
+- Could pass 90 and complete a full 360 rotation
+
+Surge-only:
+- Position Z increased
+- Position X increased slightly
+- Rotation Y increased slightly
+
+Surge + yaw:
+- Position Z increased
+- Position X increased slightly
+- Rotation Y increased continuously and could do a full 360
+
+- The continuous yaw problem was solved
+- The remaining issue became trim / balance tuning
+
+=========================================================================
+
+Surge Trim Tuning
+
+- Make surge-only travel straight with minimal X drift and minimal Y rotation
+
+Result:
+- Needed to set Right Surge Multiplier = 1.457
+- Left Surge Multiplier stayed at 1.0
+
+With this trim:
+- Surge-only motion became almost pure Z motion
+- Position X no longer drifted significantly
+- Rotation Y no longer increased significantly
+
+- Horizontal surge motion is now trimmed and stable
+
+Current surge trim:
+- Left Surge Multiplier = 1.0
+- Right Surge Multiplier = 1.457
+
+=========================================================================
+
+Yaw Trim Test
+
+- Check whether yaw needed extra trim after the surge trim was applied
+
+Result:
+- Yaw-only caused only Rotation Y to increase
+- No noticeable position drift
+- Left Yaw Multiplier = 1.0
+- Right Yaw Multiplier = 1.0 worked fine
+
+- Yaw trim did not need adjustment
+- Current yaw balance is acceptable
+
+=========================================================================
+
+Input System Control Setup
+
+- Added Unity Input System controls
+- Bound actions for:
+  - Surge
+  - Heave
+  - Yaw
+
+Current key mapping:
+- W / S = surge forward / backward
+- Space / Left Ctrl = heave up / down
+- Q / E = yaw left / right
+
+- All controls worked correctly in play mode
+
+=========================================================================
+
+Yaw Speed Issue
+
+Problem:
+- Q / E yaw rotation on Y felt extremely slow
+
+- Increasing the yaw multiplier alone was not enough because commands were being clamped
+- Increasing the horizontal thrust force made turning faster
+- But it also made the forward/backward movement too fast
+
+- Separated horizontal force into:
+  - Surge Thrust Force
+  - Yaw Thrust Force
+
+- Forward speed to stay slower
+- Turning speed is becoming much faster
+
+=========================================================================
+
+Current Working Control Setup
+
+Rigidbody:
+- Mass = 100
+- Linear Damping = 3
+- Angular Damping = 0.5
+- Use Gravity = Off
+- Interpolate = Interpolate
+- Collision Detection = Continuous
+
+Constraints:
+- Freeze Rotation X = On
+- Freeze Rotation Z = On
+- Freeze Rotation Y = Off
+
+Force settings:
+- Surge Thrust Force = 2
+- Yaw Thrust Force = 50
+- Vertical Thrust Force = 2
+
+Trim settings:
+- Left Surge Multiplier = 1.0
+- Right Surge Multiplier = 1.457
+- Left Yaw Multiplier = 1.0
+- Right Yaw Multiplier = 1.0
+
+Current behavior:
+- Surge-only = only Position Z increases
+- Heave-only = only Position Y increases
+- Yaw-only = only Rotation Y increases
+- Continuous yaw works
+- Controls are pilotable and stable for the current testing stage
+
+=========================================================================
+
+Current Status:
+
+- The submarine is controllable in Unity
+- 8-thruster layout has been tested and grouped successfully
+- Major looping and spinning problems have been reduced to manageable tuning issues
+- Surge, Heave, and Yaw all work
+- Continuous turning works
+- Forward motion has been trimmed to move mostly straight
+- Gravity is still off for now
+- Buoyancy has not been fully integrated yet
+- Next major phase will likely be:
+  - camera improvements
+  - buoyancy / neutral buoyancy
+  - more realistic underwater behavior
+  - later pitch/roll / power estimation
+
+=========================================================================
+
 - X and Y stayed stable
 - Rotation changed a lot
