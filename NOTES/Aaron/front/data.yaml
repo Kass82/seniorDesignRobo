@@ -1,0 +1,14 @@
+train: ./train/images
+val: ./val/images
+
+nc: 8
+names: [
+  "Sawfish Gate Banner",
+  "Shark Gate Banner",
+  "Full Gate",
+  "Red Slalom Post",
+  "White Slalom Post",
+  "Sawfish Torpedo Hole",
+  "Shark Torpedo Hole",
+  "Full Torpedo Banner"
+]
