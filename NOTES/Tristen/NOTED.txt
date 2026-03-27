@@ -89,7 +89,6 @@ Additional Wayland specific issue
     Instead of commenting out, run 'echo ${DISPLAY}' in the terminal, note the number it gives (e.g., :1), and change the number in the same file above (e.g., export DISPLAY=:1)
 
 
-
 -----Importing the robot to gazebo (!!! old stuff, no satisfaction guarantee !!!)-----
 https://answers.gazebosim.org/question/15898/
     find the files
@@ -126,18 +125,50 @@ https://answers.gazebosim.org/question/15898/
 
 ---
 
+
 Actually (maybe) importing the model to Gazebo
 
 Get stuff installed
 
     Solidworks **THIS SOFTWARE CAN ONLY BE INSTALLED ON WINDOWS
         www.solidworks.com/sek
+			Input your info
             MUST CHOOSE 2024 EDITION **unless there is a key available for newer version
+				Installer unavailable? Contact ME first for a new version
+					SOLIDWORKS 2024 Edition Installer
+					SolidWorksSetup.exe 209 MB (219,453,760 bytes)
+					https://drive.google.com/file/d/1kDaPAz6DV2SGrcYU91QTgvuRn5huBnSo/view?usp=sharing
+					SHA256: 6318bb7b77fe3b50eaa35c8f95dedea9298588fa53e222e34ed95ec49ce98fae
+					https://www.virustotal.com/gui/file/6318bb7b77fe3b50eaa35c8f95dedea9298588fa53e222e34ed95ec49ce98fae
+					
+					file unavailable contact tristen discord@tristenzhang user 1128470614806642748
+			Check yes you do have a key starting with 9020
         license key 9020008745489282ND6RR87H
+			key expired? Contact somebody in ME or something
             source: old robosub discord->subteams frame->check pins
                 https://discord.com/channels/814398882330837034/814398883030630445/1281683869807935518
+		
+		In the installer, checkbox ONLY SOLIDWORKS under 3D Design dropdown and input the license key in the input field boxes
+			Next, This now will automatically have all the Solidworks + other products that are granted with the license key
+			You can select specific programs that are installed, and you can later return to the installer to get anything else re/un/installed
+			
 
 
+
+heres some tutorial that can help with the gazebo stuff
+https://www.udemy.com/course/ros2-tf-urdf-rviz-gazebo/
+	Content of this Udemy course
+		Notes -> .html
+		Videos -> .mp4
+		Video transcripts -> (English) .srt file
+		ROS2 config/launch files -> zip
+		There are no direct executables
+ROS 2 for Beginners Level 2 - TF  URDF  RViz  Gazebo.7z
+8.04 GB (8,637,730,053 bytes), unpacked 8.86 GB (9,522,685,103 bytes)
+https://drive.google.com/file/d/1YKs6oSqgMy3cjp7hvajXfW4GKd9I2pAf/view?usp=sharing
+SHA256: 7212acfc7858e37a075c423a60260201886041e10c1860f96f5662d796e71714
+
+if the file becomes unavailable Message tristen discord@tristenzhang user 1128470614806642748
 
 2nd SEMESTER---------
 We have abandoned Gazebo and now we will try again in Unity instead
@@ -198,3 +229,30 @@ https://github.com/gitattributes/gitattributes/blob/master/Unity.gitattributes
 	^^for LFS
 https://github.com/github/gitignore/blob/main/Unity.gitignore
 	^^for unity projects
+	
+	
+	
+The unity project
+	Yoink Bryan#2 controls from a previous project
+	
+	Control team request: need to simulate force of each thruster to determine how each one will act/how much thrust each one needs
+	seems like Alvin doing stuff about that^
+	
+	Since the borrowed controls is old (Unity 2022), we have to change some settings regarding input (unless somebody wants to redo the controls with updated system)
+		in unity, edit > project settings > player > other settings > Configuration > Active input handling > Both
+		
+	Note that the model is to scale (exported 1cm -> unity 0.01)
+		unity units are in meters
+		
+
+
+Alvin has controls on each thruster umazing
+	no longer need bryan#2's old controls
+next: implement gravity/buoyancy
+	^feasible this sem
+	maybe future team V
+nextnext: mock course mayhaps
+nextnext part 2: research the ROS-Unity connection plugin thing
+	This allows publisher/subscriber events in ROS to also control things in Unity too
+	
+	https://github.com/Unity-Technologies/ROS-TCP-Connector
