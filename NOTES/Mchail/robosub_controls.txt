@@ -1,0 +1,137 @@
+|||| 11/7 CONTROLS TEAM MEETING ||||||
+
+analysis between raspberry pico 2 vs teensy 4.1
+- WHICH ONES FASTER
+
+bill of materials, what exactly we need and will use
+
+raspberry pi imager
+research micro ros, which is going to be on the controllers
+
+research communication protocols: how board communicate to each other
+I2C and SPI
+
+research: how'd you wire up teensy and jetson orin
+
+how to power the orin nano externally
+
+
+|||||||||| better microcontroller board ||||||
+
+raspberry pico 2 (2015?)
+- specs: https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+- available for as low as $5, but kinda difficult to find, jk you can find it at microcenter
+- 150 MHz (pretty low compared to teensy 4.1)
+- 11n wirless Lan and bluetooth 5.2
+- offers better documentation
+
+
+
+teensy 4.1 (2021?)
+- specs: https://www.pjrc.com/store/teensy41.html 
+- on amazon for $35-50
+- 600 MHz (how fast the processor's clock is running | more work per second)
+- 55 i/o pins, more flexible than pico 2
+- much faster than pico 2
+- larger ram, more room for heavy tasks tasks
+
+
+raspberry pico 2 built for smaller projects, while teensy 4.1 can handle bigger/heavier projects.
+
+
+||||| jetson orin nano ||||||
+
+- small but powerful supercomputer, tiny nvda gpu built into embedded model
+- real-time ai data: SLAM, autonomous navigation, robot perception, image/object detection
+- simply use a usb cable to link the teensy and jetson orin nano
+- guide: https://developer.nvidia.com/embedded/learn/get-started-jetson-orin-nano-devkit
+- specs: https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/nano-super-developer-kit/
+
+
+communication protocols
+
+
+||||||||| 9/25 PERSONAL NOTES ||||||||||
+
+trying to download kubuntu (idk how)
+
+realized its too complicated to dual boot and clean install so I will use a VM
+software program that pretends to be a whole computer and inside I can install kubuntu
+
+downloading virtualbox -> kubuntu -> RO2 https://www.youtube.com/watch?v=iUhrcSdweJQ
+
+
+9/26 9/26
+*TASKS*
+github refresher and its commands
+get everything set up
+KUBUNTU 22.04
+
+
+
+questions to ask Will (former robosub member) 
+- what was your role and what did you think of the project overall
+- what are some issues you personally had while working on this project? any major issues your team came across?
+- what do you think could have been worked on more? any improvements you wanted to implement 
+
+|||||||| 8/22 TEAM MEETING ||||||||
+
+Working with EE and ME
+Sub teams but can also work on other stuff
+Yearly competition against other schools
+Robot and hardware provided
+Documentation is important, write progress reports, write everything you install and do 
+Website to be worked on
+When is everyone availible website
+Group discord 
+Look through past documentation/projects
+Review github, look at jira, look at what technologies are used
+
+9:30-10:30 next Friday
+
+08/29 Documentation
+
+Website: improve many aspects
+Reworking github and user friendly
+Sys architecture: Ross (GET FAMILIAR)
+
+robonation robosub
+
+recognize gates and targets
+Two initial gates have images (image recognition tool)
+
+Torpedo launcher, Ball dropper, sonar
+
+Goal: Top 15
+
+Stretch Goal: coordination/communicate action between two subs
+
+
+|||||| PERSONAL NOTES ||||||||
+
+
+look throughmicro controllers
+controlling speed and configuration
+
+look through ros2 humble documentation
+https://docs.ros.org/en/humble/index.html
+
+
+play around with turtlesim on ros2
+
+
+goals for this week:
+finish setting up environments
+introduction to turtle
+
+
+||||||||| 3/18 ||||||||||
+
+Transfer notes to new file github by friday
+
+controls: instead of using teensy, we opted in for a flight controller
+[side by side comparison and why we changed it]
+
+currently missing 3 components: flight controller, radio communication, UR Module
+
+
