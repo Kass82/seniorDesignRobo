@@ -1,0 +1,30 @@
+-Html after clicking a page- 
+
+so since we're using Nginx we can add configs 
+
+after i located :
+	root@debian13-robosubla:/etc/nginx/sites-available#
+i edited 
+	sudo nano default
+
+	using the command to locate: try_files $uri $uri/ =404;
+        and changing it into -> try_files $uri $uri.html $uri/ =404;
+that way we don't have to see .html towards the end.
+
+BUT to ensure all is well:
+	sudo nginx -t 
+then:
+	sudo systemctl restart nginx
+
+sole purpose was to remove the .html after clicking on the pages on the website BUT at least i can use /name to just locate it
+
+Update! it was correct i just did it within the wrong location within default
+
+////////////////////////////////////////////////////////////////////////
+WELL i at least got it to upload THIS way from LOCAL not on the server, make sure you're not on the server if using gitbash!
+
+
+scp -i ~/.ssh/id_RoboSub_web_server /c/Users/vera8/Downloads/robosub-logo.png root@167.172.126.49:/var/www/html/images/
+
+
+
