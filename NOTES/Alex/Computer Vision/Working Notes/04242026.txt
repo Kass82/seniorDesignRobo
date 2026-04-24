@@ -1,0 +1,15 @@
+Here I am updating my GitHub at 2:09 AM. I finished my progress for the semester but I am sure you are confused on the timeline. 
+
+I tried working on my own small model to sharpen my tools and you can find it in 'Google Colab Runs', but I never finished it. It might have some useful commands and codes but it isn't necessary.
+
+Then, me and Aaran agreed on using RoboSub 2025/Task/Task Data/Mixed Task Data/ARVP/Labeled Images/front
+I zipped front into front.zip and put it into my Google Drive and tried to successfully train a model on it but went through dependency hell because of PyTorch and other dependencies. 
+
+Hence, you will find DependencyHell1 and DependencyHell2 in 'Google Colab Runs', but only open it if you want to see what did not work and what not to do.
+
+Finally, I got through all the dependencies and successfully trained a model using front.zip, you can find it in 'Google Colab Runs' and it is named 'FinalVersion.ipynb'. From there you can improve as you'd like, use a bigger dataset, label your own images, whatever works. 
+
+Honestly we started from scratch and had no one to follow so I hope that this helps you build your foundation quicker than we did. Good luck!
+
+RoboSub Data Sharing Folder:
+https://robonation.app.box.com/s/pip5o8xhaqciotz09lqypp4v0txrlktk/folder/134951486128

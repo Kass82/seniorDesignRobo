@@ -1,0 +1,7 @@
+Hello, I am Alex. 
+
+My laptop does not have a NVIDIA GPU or a good GPU at all, so I opted to use Google Colab. Some things to keep in mind:
+- Change runtime type to T4 GPU (the free GPU)
+- Use Google Drive to store your zipped that contains all of your images
+- Use Google Colab commands to unzip it 
+- Make sure you save your Google Colab model / progress into your Google Drive because Google Colab does not keep your progress and you may have to rerun epoch training. Do not rerun epoch training with a not-so-great GPU, it is extremely time-consuming.
